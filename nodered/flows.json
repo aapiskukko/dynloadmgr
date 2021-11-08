@@ -10,7 +10,7 @@
         "id": "df1407b1752224f3",
         "type": "mqtt-broker",
         "name": "",
-        "broker": "localhost",
+        "broker": "mosquitto",
         "port": "1883",
         "clientid": "",
         "autoConnect": true,
