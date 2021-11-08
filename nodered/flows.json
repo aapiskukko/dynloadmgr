@@ -25,7 +25,7 @@
         ],
         "out": [
             {
-                "x": 1260,
+                "x": 1140,
                 "y": 80,
                 "wires": [
                     {
@@ -225,25 +225,6 @@
         "y": 80,
         "wires": [
             [
-                "ac22f17a1593bb7e"
-            ]
-        ]
-    },
-    {
-        "id": "ac22f17a1593bb7e",
-        "type": "function",
-        "z": "efb1c3cb4ec1b96e",
-        "name": "Status",
-        "func": "var today = new Date();\nvar time = today.getHours() + \":\" + today.getMinutes() + \":\" + today.getSeconds();\n\nnode.status({\n    fill:\"green\",\n    shape:\"dot\",\n    text:`${time} charge ${msg.payload} A`\n});\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 990,
-        "y": 80,
-        "wires": [
-            [
                 "29132266ba2a58e1"
             ]
         ]
@@ -254,7 +235,7 @@
         "z": "efb1c3cb4ec1b96e",
         "name": "",
         "scope": [
-            "ac22f17a1593bb7e"
+            "29132266ba2a58e1"
         ],
         "x": 100,
         "y": 260,
@@ -267,13 +248,13 @@
         "type": "function",
         "z": "efb1c3cb4ec1b96e",
         "name": "Check Input",
-        "func": "if (msg.payload == undefined) {\n    var prev = flow.get(\"prevAmps\");\n    node.error(`no input, using previous value ${prev}`);\n    msg.payload = prev;\n}\nflow.set(\"prevAmps\", msg.payload);\n\nreturn msg;",
+        "func": "var today = new Date();\nvar time = today.getHours() + \":\" + today.getMinutes() + \":\" + today.getSeconds();\n\nif (msg.payload == undefined) {\n    var prev = flow.get(\"prevAmps\");\n    node.error(`no input, using previous value ${prev}`);\n    msg.payload = prev;\n}\nflow.set(\"prevAmps\", msg.payload);\n\nnode.status({\n    fill:\"green\",\n    shape:\"dot\",\n    text:`${time} charge ${msg.payload} A`\n});\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "// Code added here will be run once\n// whenever the node is started.\nflow.set(\"prevAmps\", 6);",
         "finalize": "",
         "libs": [],
-        "x": 1150,
+        "x": 1010,
         "y": 80,
         "wires": [
             []

@@ -234,7 +234,7 @@
         "type": "function",
         "z": "efb1c3cb4ec1b96e",
         "name": "Status",
-        "func": "var today = new Date();\nvar time = today.getHours() + \":\" + today.getMinutes() + \":\" + today.getSeconds();\n\nnode.status({\n    fill:\"green\",\n    shape:\"ring\",\n    text:`${time} charge ${msg.payload} A`\n});\nreturn msg;",
+        "func": "var today = new Date();\nvar time = today.getHours() + \":\" + today.getMinutes() + \":\" + today.getSeconds();\n\nnode.status({\n    fill:\"green\",\n    shape:\"dot\",\n    text:`${time} charge ${msg.payload} A`\n});\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
