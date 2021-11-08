@@ -7,10 +7,53 @@
         "info": ""
     },
     {
+        "id": "efb1c3cb4ec1b96e",
+        "type": "subflow",
+        "name": "Current Charge",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 60,
+                "y": 80,
+                "wires": [
+                    {
+                        "id": "ea765d1a2543c31b"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 1260,
+                "y": 80,
+                "wires": [
+                    {
+                        "id": "29132266ba2a58e1",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [],
+        "meta": {},
+        "color": "#DDAA99",
+        "status": {
+            "x": 230,
+            "y": 260,
+            "wires": [
+                {
+                    "id": "45e7a020507cab3a",
+                    "port": 0
+                }
+            ]
+        }
+    },
+    {
         "id": "df1407b1752224f3",
         "type": "mqtt-broker",
         "name": "",
-        "broker": "localhost",
+        "broker": "mosquitto",
         "port": "1883",
         "clientid": "",
         "autoConnect": true,
@@ -33,30 +76,9 @@
         "sessionExpiry": ""
     },
     {
-        "id": "6a6ce9b1913a8316",
-        "type": "mqtt in",
-        "z": "f6f2187d.f17ca8",
-        "name": "Shelly 3EM",
-        "topic": "shellies/shellyem3-C45BBE6A7845/emeter/+/current",
-        "qos": "2",
-        "datatype": "auto",
-        "broker": "df1407b1752224f3",
-        "nl": false,
-        "rap": true,
-        "rh": 0,
-        "inputs": 0,
-        "x": 90,
-        "y": 140,
-        "wires": [
-            [
-                "ea765d1a2543c31b"
-            ]
-        ]
-    },
-    {
         "id": "87204c40cf02ba53",
         "type": "join",
-        "z": "f6f2187d.f17ca8",
+        "z": "efb1c3cb4ec1b96e",
         "name": "",
         "mode": "custom",
         "build": "array",
@@ -73,8 +95,8 @@
         "reduceInit": "",
         "reduceInitType": "",
         "reduceFixup": "",
-        "x": 410,
-        "y": 140,
+        "x": 350,
+        "y": 80,
         "wires": [
             [
                 "01b3f7383b477df5"
@@ -84,7 +106,7 @@
     {
         "id": "ea765d1a2543c31b",
         "type": "change",
-        "z": "f6f2187d.f17ca8",
+        "z": "efb1c3cb4ec1b96e",
         "name": "Number",
         "rules": [
             {
@@ -100,8 +122,8 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 260,
-        "y": 140,
+        "x": 200,
+        "y": 80,
         "wires": [
             [
                 "87204c40cf02ba53"
@@ -111,7 +133,7 @@
     {
         "id": "01b3f7383b477df5",
         "type": "function",
-        "z": "f6f2187d.f17ca8",
+        "z": "efb1c3cb4ec1b96e",
         "name": "Current A",
         "func": "var brakerSize = 25;\nvar maxChargeAmps = 16;\nvar minChargeAmps = 6;\nvar amps = null;\nvar maxPhase = Math.max(...msg.payload);\nvar availAmps = Math.floor(brakerSize - maxPhase);\n\nnode.debug(`max phase amps ${maxPhase}`);\nnode.debug(`available amps ${availAmps}`);\n\nif (availAmps >= maxChargeAmps) {\n    amps = maxChargeAmps;\n    node.debug(`setting charge amps to ${amps} (max)`);\n} else if (availAmps < maxChargeAmps && availAmps >= minChargeAmps) {\n    amps = availAmps;\n    node.debug(`setting charge amps to ${amps}`);\n} else if (availAmps < minChargeAmps) {\n    amps = 0;\n    node.debug(`available amps below ${minChargeAmps}, stopping charging`);\n}\n\nmsg.topic = \"charging amps\";\nmsg.payload = amps;\nreturn msg;",
         "outputs": 1,
@@ -119,11 +141,162 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 560,
+        "x": 500,
+        "y": 80,
+        "wires": [
+            [
+                "c8eaa7f9deb243d2"
+            ]
+        ]
+    },
+    {
+        "id": "c8eaa7f9deb243d2",
+        "type": "join",
+        "z": "efb1c3cb4ec1b96e",
+        "name": "",
+        "mode": "custom",
+        "build": "array",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "",
+        "count": "",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 650,
+        "y": 80,
+        "wires": [
+            [
+                "081fa9d7b976de6e"
+            ]
+        ]
+    },
+    {
+        "id": "01c9c93ad9a093b3",
+        "type": "inject",
+        "z": "efb1c3cb4ec1b96e",
+        "name": "",
+        "props": [
+            {
+                "p": "complete",
+                "v": "true",
+                "vt": "bool"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 480,
+        "y": 160,
+        "wires": [
+            [
+                "c8eaa7f9deb243d2"
+            ]
+        ]
+    },
+    {
+        "id": "081fa9d7b976de6e",
+        "type": "change",
+        "z": "efb1c3cb4ec1b96e",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload[$count(payload) - 1]",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 820,
+        "y": 80,
+        "wires": [
+            [
+                "ac22f17a1593bb7e"
+            ]
+        ]
+    },
+    {
+        "id": "ac22f17a1593bb7e",
+        "type": "function",
+        "z": "efb1c3cb4ec1b96e",
+        "name": "Status",
+        "func": "var today = new Date();\nvar time = today.getHours() + \":\" + today.getMinutes() + \":\" + today.getSeconds();\n\nnode.status({\n    fill:\"green\",\n    shape:\"ring\",\n    text:`${time} charge ${msg.payload} A`\n});\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 990,
+        "y": 80,
+        "wires": [
+            [
+                "29132266ba2a58e1"
+            ]
+        ]
+    },
+    {
+        "id": "45e7a020507cab3a",
+        "type": "status",
+        "z": "efb1c3cb4ec1b96e",
+        "name": "",
+        "scope": [
+            "ac22f17a1593bb7e"
+        ],
+        "x": 100,
+        "y": 260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "29132266ba2a58e1",
+        "type": "function",
+        "z": "efb1c3cb4ec1b96e",
+        "name": "Check Input",
+        "func": "if (msg.payload == undefined) {\n    var prev = flow.get(\"prevAmps\");\n    node.error(`no input, using previous value ${prev}`);\n    msg.payload = prev;\n}\nflow.set(\"prevAmps\", msg.payload);\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "// Code added here will be run once\n// whenever the node is started.\nflow.set(\"prevAmps\", 6);",
+        "finalize": "",
+        "libs": [],
+        "x": 1150,
+        "y": 80,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "6a6ce9b1913a8316",
+        "type": "mqtt in",
+        "z": "f6f2187d.f17ca8",
+        "name": "Shelly 3EM",
+        "topic": "shellies/shellyem3-C45BBE6A7845/emeter/+/current",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "df1407b1752224f3",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 90,
         "y": 140,
         "wires": [
             [
-                "59cc912a23cb0b7d"
+                "ca6ce1ad62163141"
             ]
         ]
     },
@@ -139,22 +312,17 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 890,
+        "x": 490,
         "y": 140,
         "wires": []
     },
     {
-        "id": "59cc912a23cb0b7d",
-        "type": "function",
+        "id": "ca6ce1ad62163141",
+        "type": "subflow:efb1c3cb4ec1b96e",
         "z": "f6f2187d.f17ca8",
-        "name": "",
-        "func": "\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 720,
+        "name": "Max Charge Amps",
+        "env": [],
+        "x": 290,
         "y": 140,
         "wires": [
             [
