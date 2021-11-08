@@ -25,7 +25,7 @@
         ],
         "out": [
             {
-                "x": 1260,
+                "x": 1140,
                 "y": 80,
                 "wires": [
                     {
@@ -74,6 +74,20 @@
         "willPayload": "",
         "willMsg": {},
         "sessionExpiry": ""
+    },
+    {
+        "id": "c456f62e30a15dfe",
+        "type": "influxdb",
+        "hostname": "127.0.0.1",
+        "port": "8086",
+        "protocol": "http",
+        "database": "database",
+        "name": "",
+        "usetls": false,
+        "tls": "",
+        "influxdbVersion": "2.0",
+        "url": "http://inxfluxdb:8086",
+        "rejectUnauthorized": false
     },
     {
         "id": "87204c40cf02ba53",
@@ -225,25 +239,6 @@
         "y": 80,
         "wires": [
             [
-                "ac22f17a1593bb7e"
-            ]
-        ]
-    },
-    {
-        "id": "ac22f17a1593bb7e",
-        "type": "function",
-        "z": "efb1c3cb4ec1b96e",
-        "name": "Status",
-        "func": "var today = new Date();\nvar time = today.getHours() + \":\" + today.getMinutes() + \":\" + today.getSeconds();\n\nnode.status({\n    fill:\"green\",\n    shape:\"dot\",\n    text:`${time} charge ${msg.payload} A`\n});\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 990,
-        "y": 80,
-        "wires": [
-            [
                 "29132266ba2a58e1"
             ]
         ]
@@ -254,7 +249,7 @@
         "z": "efb1c3cb4ec1b96e",
         "name": "",
         "scope": [
-            "ac22f17a1593bb7e"
+            "29132266ba2a58e1"
         ],
         "x": 100,
         "y": 260,
@@ -267,13 +262,13 @@
         "type": "function",
         "z": "efb1c3cb4ec1b96e",
         "name": "Check Input",
-        "func": "if (msg.payload == undefined) {\n    var prev = flow.get(\"prevAmps\");\n    node.error(`no input, using previous value ${prev}`);\n    msg.payload = prev;\n}\nflow.set(\"prevAmps\", msg.payload);\n\nreturn msg;",
+        "func": "var now = new Date();\nvar formTime = [];\n[now.getHours(), now.getMinutes(), now.getSeconds()].forEach(num => {\n    let val = num.toLocaleString('en-US', {\n        minimumIntegerDigits: 2,\n        useGrouping: false\n    })\n    formTime.push(val);\n})\nvar time = `${formTime[0]}:${formTime[1]}:${formTime[2]}`;\n\nvar color = 'green';\n\nif (msg.payload == undefined) {\n    var prev = flow.get(\"prevAmps\");\n    node.error(`no input, using previous value ${prev}`);\n    msg.payload = prev;\n    color = 'yellow';\n}\nflow.set(\"prevAmps\", msg.payload);\n\nnode.status({\n    fill: color,\n    shape: 'dot',\n    text:`${time} charge ${msg.payload} A`\n});\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "// Code added here will be run once\n// whenever the node is started.\nflow.set(\"prevAmps\", 6);",
         "finalize": "",
         "libs": [],
-        "x": 1150,
+        "x": 1010,
         "y": 80,
         "wires": [
             []
@@ -312,7 +307,7 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 490,
+        "x": 530,
         "y": 140,
         "wires": []
     },
@@ -326,8 +321,27 @@
         "y": 140,
         "wires": [
             [
-                "1958ed0470c539cd"
+                "1958ed0470c539cd",
+                "9f02eefdaa5b62a8"
             ]
         ]
+    },
+    {
+        "id": "9f02eefdaa5b62a8",
+        "type": "influxdb out",
+        "z": "f6f2187d.f17ca8",
+        "influxdb": "c456f62e30a15dfe",
+        "name": "",
+        "measurement": "charge",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "s",
+        "retentionPolicyV18Flux": "",
+        "org": "nodered",
+        "bucket": "nodered",
+        "x": 600,
+        "y": 240,
+        "wires": []
     }
 ]
