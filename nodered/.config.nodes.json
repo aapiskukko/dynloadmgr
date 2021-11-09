@@ -426,5 +426,24 @@
                 "file": "/usr/src/node-red/node_modules/node-red-contrib-influxdb/influxdb.js"
             }
         }
+    },
+    "node-red-contrib-moving-average": {
+        "name": "node-red-contrib-moving-average",
+        "version": "1.3.0",
+        "local": false,
+        "user": false,
+        "nodes": {
+            "moving-average": {
+                "name": "moving-average",
+                "types": [
+                    "moving-average"
+                ],
+                "enabled": true,
+                "local": false,
+                "user": false,
+                "module": "node-red-contrib-moving-average",
+                "file": "/usr/src/node-red/node_modules/node-red-contrib-moving-average/moving-average.js"
+            }
+        }
     }
 }

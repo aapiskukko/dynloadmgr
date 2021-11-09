@@ -262,7 +262,7 @@
         "type": "function",
         "z": "efb1c3cb4ec1b96e",
         "name": "Check Input",
-        "func": "var now = new Date();\nvar formTime = [];\n[now.getHours(), now.getMinutes(), now.getSeconds()].forEach(num => {\n    let val = num.toLocaleString('en-US', {\n        minimumIntegerDigits: 2,\n        useGrouping: false\n    })\n    formTime.push(val);\n})\nvar time = `${formTime[0]}:${formTime[1]}:${formTime[2]}`;\n\nvar color = 'green';\n\nif (msg.payload == undefined) {\n    var prev = flow.get(\"prevAmps\");\n    node.error(`no input, using previous value ${prev}`);\n    msg.payload = prev;\n    color = 'yellow';\n}\nflow.set(\"prevAmps\", msg.payload);\n\nnode.status({\n    fill: color,\n    shape: 'dot',\n    text:`${time} charge ${msg.payload} A`\n});\n\nreturn msg;",
+        "func": "var now = new Date();\nvar formTime = [];\n[now.getHours(), now.getMinutes(), now.getSeconds()].forEach(num => {\n    let val = num.toLocaleString('en-US', {\n        minimumIntegerDigits: 2,\n        useGrouping: false\n    })\n    formTime.push(val);\n})\nvar time = `${formTime[0]}:${formTime[1]}:${formTime[2]}`;\n\nvar color = 'green';\n\nif (msg.payload == undefined) {\n    var prev = flow.get(\"prevAmps\");\n    node.error(`no input, using previous value ${prev}`);\n    msg.payload = prev;\n    color = 'yellow';\n}\nflow.set(\"prevAmps\", msg.payload);\n\nnode.status({\n    fill: color,\n    shape: 'dot',\n    text:`${time} charge ${msg.payload} A`\n});\n\nmsg.topic = \"charge\";\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "// Code added here will be run once\n// whenever the node is started.\nflow.set(\"prevAmps\", 6);",
@@ -296,22 +296,6 @@
         ]
     },
     {
-        "id": "1958ed0470c539cd",
-        "type": "debug",
-        "z": "f6f2187d.f17ca8",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 530,
-        "y": 140,
-        "wires": []
-    },
-    {
         "id": "ca6ce1ad62163141",
         "type": "subflow:efb1c3cb4ec1b96e",
         "z": "f6f2187d.f17ca8",
@@ -321,8 +305,8 @@
         "y": 140,
         "wires": [
             [
-                "1958ed0470c539cd",
-                "9f02eefdaa5b62a8"
+                "9f02eefdaa5b62a8",
+                "701314f8f2734417"
             ]
         ]
     },
@@ -340,8 +324,68 @@
         "retentionPolicyV18Flux": "",
         "org": "nodered",
         "bucket": "nodered",
-        "x": 590,
-        "y": 240,
+        "x": 550,
+        "y": 180,
         "wires": []
+    },
+    {
+        "id": "701314f8f2734417",
+        "type": "moving-average",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "amount": "12",
+        "weight": "cumulative",
+        "x": 550,
+        "y": 100,
+        "wires": [
+            [
+                "43413dd583780ee7"
+            ]
+        ]
+    },
+    {
+        "id": "b6c67d19522ac87d",
+        "type": "influxdb out",
+        "z": "f6f2187d.f17ca8",
+        "influxdb": "c456f62e30a15dfe",
+        "name": "",
+        "measurement": "chargeMovAvg",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "s",
+        "retentionPolicyV18Flux": "",
+        "org": "nodered",
+        "bucket": "nodered",
+        "x": 1060,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "43413dd583780ee7",
+        "type": "change",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "$floor(payload)",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 790,
+        "y": 100,
+        "wires": [
+            [
+                "b6c67d19522ac87d"
+            ]
+        ]
     }
 ]
