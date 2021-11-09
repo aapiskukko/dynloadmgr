@@ -306,7 +306,8 @@
         "wires": [
             [
                 "9f02eefdaa5b62a8",
-                "701314f8f2734417"
+                "701314f8f2734417",
+                "11979d3b3697211d"
             ]
         ]
     },
@@ -325,7 +326,7 @@
         "org": "nodered",
         "bucket": "nodered",
         "x": 550,
-        "y": 180,
+        "y": 220,
         "wires": []
     },
     {
@@ -339,8 +340,7 @@
         "y": 100,
         "wires": [
             [
-                "b6c67d19522ac87d",
-                "61ae4761797c13b5"
+                "43413dd583780ee7"
             ]
         ]
     },
@@ -358,24 +358,95 @@
         "retentionPolicyV18Flux": "",
         "org": "nodered",
         "bucket": "nodered",
-        "x": 880,
+        "x": 1060,
         "y": 100,
         "wires": []
     },
     {
-        "id": "61ae4761797c13b5",
-        "type": "debug",
+        "id": "43413dd583780ee7",
+        "type": "change",
         "z": "f6f2187d.f17ca8",
         "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 810,
-        "y": 180,
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "$floor(payload)",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 790,
+        "y": 100,
+        "wires": [
+            [
+                "b6c67d19522ac87d"
+            ]
+        ]
+    },
+    {
+        "id": "11979d3b3697211d",
+        "type": "moving-average",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "amount": "12",
+        "weight": "linear",
+        "x": 540,
+        "y": 160,
+        "wires": [
+            [
+                "2f6c972c7ed80f76"
+            ]
+        ]
+    },
+    {
+        "id": "95267996e8ac88a2",
+        "type": "influxdb out",
+        "z": "f6f2187d.f17ca8",
+        "influxdb": "c456f62e30a15dfe",
+        "name": "",
+        "measurement": "chargeMovAvgWgt",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "s",
+        "retentionPolicyV18Flux": "",
+        "org": "nodered",
+        "bucket": "nodered",
+        "x": 1070,
+        "y": 160,
         "wires": []
+    },
+    {
+        "id": "2f6c972c7ed80f76",
+        "type": "change",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "$floor(payload)",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 790,
+        "y": 160,
+        "wires": [
+            [
+                "95267996e8ac88a2"
+            ]
+        ]
     }
 ]
