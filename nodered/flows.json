@@ -25,11 +25,21 @@
         ],
         "out": [
             {
-                "x": 1140,
-                "y": 80,
+                "x": 1380,
+                "y": 60,
                 "wires": [
                     {
-                        "id": "29132266ba2a58e1",
+                        "id": "12d675e75c03c2a4",
+                        "port": 0
+                    }
+                ]
+            },
+            {
+                "x": 1380,
+                "y": 100,
+                "wires": [
+                    {
+                        "id": "3575a311f7698962",
                         "port": 0
                     }
                 ]
@@ -149,7 +159,7 @@
         "type": "function",
         "z": "efb1c3cb4ec1b96e",
         "name": "Current A",
-        "func": "var brakerSize = 25;\nvar maxChargeAmps = 16;\nvar minChargeAmps = 6;\nvar amps = null;\nvar maxPhase = Math.max(...msg.payload);\nvar availAmps = Math.floor(brakerSize - maxPhase);\n\nnode.debug(`max phase amps ${maxPhase}`);\nnode.debug(`available amps ${availAmps}`);\n\nif (availAmps >= maxChargeAmps) {\n    amps = maxChargeAmps;\n    node.debug(`setting charge amps to ${amps} (max)`);\n} else if (availAmps < maxChargeAmps && availAmps >= minChargeAmps) {\n    amps = availAmps;\n    node.debug(`setting charge amps to ${amps}`);\n} else if (availAmps < minChargeAmps) {\n    amps = 0;\n    node.debug(`available amps below ${minChargeAmps}, stopping charging`);\n}\n\nmsg.topic = \"charging amps\";\nmsg.payload = amps;\nreturn msg;",
+        "func": "var brakerSize = 25;\nvar maxChargeAmps = 16;\nvar minChargeAmps = 6;\nvar amps = null;\nvar maxPhase = Math.max(...msg.payload);\nvar availAmps = Math.floor(brakerSize - maxPhase);\n\nnode.debug(`max phase amps ${maxPhase}`);\nnode.debug(`available amps ${availAmps}`);\n\nif (availAmps >= maxChargeAmps) {\n    amps = maxChargeAmps;\n    node.debug(`setting charge amps to ${amps} (max)`);\n} else if (availAmps < maxChargeAmps && availAmps >= minChargeAmps) {\n    amps = availAmps;\n    node.debug(`setting charge amps to ${amps}`);\n} else if (availAmps < minChargeAmps) {\n    amps = 0;\n    node.debug(`available amps below ${minChargeAmps}, stopping charging`);\n}\n\nmsg.topic = \"charging amps\";\nmsg.payload = {\n    inst: amps,\n    max: maxPhase\n} \n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -262,14 +272,67 @@
         "type": "function",
         "z": "efb1c3cb4ec1b96e",
         "name": "Check Input",
-        "func": "var now = new Date();\nvar formTime = [];\n[now.getHours(), now.getMinutes(), now.getSeconds()].forEach(num => {\n    let val = num.toLocaleString('en-US', {\n        minimumIntegerDigits: 2,\n        useGrouping: false\n    })\n    formTime.push(val);\n})\nvar time = `${formTime[0]}:${formTime[1]}:${formTime[2]}`;\n\nvar color = 'green';\n\nif (msg.payload == undefined) {\n    var prev = flow.get(\"prevAmps\");\n    node.error(`no input, using previous value ${prev}`);\n    msg.payload = prev;\n    color = 'yellow';\n}\nflow.set(\"prevAmps\", msg.payload);\n\nnode.status({\n    fill: color,\n    shape: 'dot',\n    text:`${time} charge ${msg.payload} A`\n});\n\nmsg.topic = \"charge\";\nreturn msg;",
+        "func": "var now = new Date();\nvar formTime = [];\n[now.getHours(), now.getMinutes(), now.getSeconds()].forEach(num => {\n    let val = num.toLocaleString('en-US', {\n        minimumIntegerDigits: 2,\n        useGrouping: false\n    })\n    formTime.push(val);\n})\nvar time = `${formTime[0]}:${formTime[1]}:${formTime[2]}`;\n\nvar color = 'green';\n\nif (msg.payload == undefined) {\n    var prev = flow.get(\"prevAmps\");\n    node.error(`using old inst ${prev.inst} max ${prev.max}`);\n    msg.payload = prev;\n    color = 'yellow';\n}\nflow.set(\"prevAmps\", msg.payload);\n\nnode.status({\n    fill: color,\n    shape: 'dot',\n    text:`${time} inst ${msg.payload.inst} max ${msg.payload.max}`\n});\n\nmsg.topic = \"charge\";\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
-        "initialize": "// Code added here will be run once\n// whenever the node is started.\nflow.set(\"prevAmps\", 6);",
+        "initialize": "// Code added here will be run once\n// whenever the node is started.\nvar prevAmps = {\n    inst: 6,\n    max: 0\n}\nflow.set(\"prevAmps\", prevAmps);",
         "finalize": "",
         "libs": [],
         "x": 1010,
         "y": 80,
+        "wires": [
+            [
+                "12d675e75c03c2a4",
+                "3575a311f7698962"
+            ]
+        ]
+    },
+    {
+        "id": "12d675e75c03c2a4",
+        "type": "change",
+        "z": "efb1c3cb4ec1b96e",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.inst",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1240,
+        "y": 60,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "3575a311f7698962",
+        "type": "change",
+        "z": "efb1c3cb4ec1b96e",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.max",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1240,
+        "y": 100,
         "wires": [
             []
         ]
@@ -305,8 +368,11 @@
         "y": 140,
         "wires": [
             [
-                "9f02eefdaa5b62a8",
-                "701314f8f2734417"
+                "701314f8f2734417",
+                "9f02eefdaa5b62a8"
+            ],
+            [
+                "677f626d166e92dc"
             ]
         ]
     },
@@ -324,8 +390,8 @@
         "retentionPolicyV18Flux": "",
         "org": "nodered",
         "bucket": "nodered",
-        "x": 550,
-        "y": 180,
+        "x": 570,
+        "y": 120,
         "wires": []
     },
     {
@@ -335,8 +401,8 @@
         "name": "",
         "amount": "12",
         "weight": "cumulative",
-        "x": 550,
-        "y": 100,
+        "x": 570,
+        "y": 60,
         "wires": [
             [
                 "da1f84f606288f66"
@@ -357,8 +423,8 @@
         "retentionPolicyV18Flux": "",
         "org": "nodered",
         "bucket": "nodered",
-        "x": 1040,
-        "y": 100,
+        "x": 1060,
+        "y": 60,
         "wires": []
     },
     {
@@ -366,18 +432,36 @@
         "type": "function",
         "z": "f6f2187d.f17ca8",
         "name": "",
-        "func": "if (msg.payload < 6) {\n    msg.payload = 0;\n}\nmsg.payload = Math.floor(msg.payload);\nreturn msg;",
+        "func": "if (msg.payload < 6) {\n    msg.payload = 0;\n}\nmsg.payload = Math.round(msg.payload);\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 780,
-        "y": 100,
+        "x": 800,
+        "y": 60,
         "wires": [
             [
                 "b6c67d19522ac87d"
             ]
         ]
+    },
+    {
+        "id": "677f626d166e92dc",
+        "type": "influxdb out",
+        "z": "f6f2187d.f17ca8",
+        "influxdb": "c456f62e30a15dfe",
+        "name": "",
+        "measurement": "maxPhase",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "s",
+        "retentionPolicyV18Flux": "",
+        "org": "nodered",
+        "bucket": "nodered",
+        "x": 590,
+        "y": 180,
+        "wires": []
     }
 ]
