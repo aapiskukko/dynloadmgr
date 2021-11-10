@@ -29,7 +29,7 @@ services:
       - DOCKER_INFLUXDB_INIT_PASSWORD=nodered8086
       - DOCKER_INFLUXDB_INIT_ORG=nodered
       - DOCKER_INFLUXDB_INIT_BUCKET=nodered
-      - DOCKER_INFLUXDB_INIT_RETENTION=1w
+      - DOCKER_INFLUXDB_INIT_RETENTION=24h
       - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=kasvit-kasvaa-vain
     restart: "always"
 

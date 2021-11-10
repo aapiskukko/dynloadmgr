@@ -1,3 +1,5 @@
 influxdb/data
 grafana/data
+nodered/.config*
+nodered/.flows*
 *.backup
