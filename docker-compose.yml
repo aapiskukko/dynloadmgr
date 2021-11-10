@@ -41,5 +41,6 @@ services:
       - ./grafana/data:/var/lib/grafana
       - ./grafana/grafana.ini:/etc/grafana/grafana.ini
       - ./grafana/provisioning:/etc/grafana/provisioning
+      - ./grafana/dashboards:/var/lib/dashboards
     user: "${UID}:${GID}"
     restart: "always"

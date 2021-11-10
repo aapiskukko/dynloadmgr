@@ -25,7 +25,7 @@
         ],
         "out": [
             {
-                "x": 1380,
+                "x": 1520,
                 "y": 60,
                 "wires": [
                     {
@@ -35,7 +35,7 @@
                 ]
             },
             {
-                "x": 1380,
+                "x": 1520,
                 "y": 100,
                 "wires": [
                     {
@@ -197,7 +197,7 @@
         "y": 80,
         "wires": [
             [
-                "081fa9d7b976de6e"
+                "4551de164ed50f76"
             ]
         ]
     },
@@ -245,7 +245,7 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 820,
+        "x": 960,
         "y": 80,
         "wires": [
             [
@@ -278,7 +278,7 @@
         "initialize": "// Code added here will be run once\n// whenever the node is started.\nvar prevAmps = {\n    inst: 6,\n    max: 0\n}\nflow.set(\"prevAmps\", prevAmps);",
         "finalize": "",
         "libs": [],
-        "x": 1010,
+        "x": 1150,
         "y": 80,
         "wires": [
             [
@@ -306,7 +306,7 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 1240,
+        "x": 1380,
         "y": 60,
         "wires": [
             []
@@ -331,10 +331,33 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 1240,
+        "x": 1380,
         "y": 100,
         "wires": [
             []
+        ]
+    },
+    {
+        "id": "4551de164ed50f76",
+        "type": "switch",
+        "z": "efb1c3cb4ec1b96e",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "nempty"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 790,
+        "y": 80,
+        "wires": [
+            [
+                "081fa9d7b976de6e"
+            ]
         ]
     },
     {
