@@ -428,7 +428,7 @@
         "y": 60,
         "wires": [
             [
-                "da1f84f606288f66"
+                "84e87b66aed444f5"
             ]
         ]
     },
@@ -446,28 +446,9 @@
         "retentionPolicyV18Flux": "",
         "org": "nodered",
         "bucket": "nodered",
-        "x": 1060,
+        "x": 1100,
         "y": 60,
         "wires": []
-    },
-    {
-        "id": "da1f84f606288f66",
-        "type": "function",
-        "z": "f6f2187d.f17ca8",
-        "name": "",
-        "func": "msg.payload = Math.round(msg.payload);\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 800,
-        "y": 60,
-        "wires": [
-            [
-                "b6c67d19522ac87d"
-            ]
-        ]
     },
     {
         "id": "677f626d166e92dc",
@@ -486,5 +467,32 @@
         "x": 590,
         "y": 180,
         "wires": []
+    },
+    {
+        "id": "84e87b66aed444f5",
+        "type": "change",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "$round(payload)",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 820,
+        "y": 60,
+        "wires": [
+            [
+                "b6c67d19522ac87d"
+            ]
+        ]
     }
 ]
