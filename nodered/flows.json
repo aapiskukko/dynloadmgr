@@ -15,18 +15,18 @@
         "in": [
             {
                 "x": 60,
-                "y": 80,
+                "y": 120,
                 "wires": [
                     {
-                        "id": "ea765d1a2543c31b"
+                        "id": "aaf7eef14e3bd664"
                     }
                 ]
             }
         ],
         "out": [
             {
-                "x": 1520,
-                "y": 60,
+                "x": 1640,
+                "y": 100,
                 "wires": [
                     {
                         "id": "12d675e75c03c2a4",
@@ -35,8 +35,8 @@
                 ]
             },
             {
-                "x": 1520,
-                "y": 100,
+                "x": 1640,
+                "y": 140,
                 "wires": [
                     {
                         "id": "3575a311f7698962",
@@ -58,6 +58,39 @@
                 }
             ]
         }
+    },
+    {
+        "id": "2984656079c534ea",
+        "type": "subflow",
+        "name": "Phase Currents",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 60,
+                "y": 100,
+                "wires": [
+                    {
+                        "id": "0aa11c1b04b03f84"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 1100,
+                "y": 100,
+                "wires": [
+                    {
+                        "id": "82d6f8c38f37fb5f",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [],
+        "meta": {},
+        "color": "#DDAA99"
     },
     {
         "id": "df1407b1752224f3",
@@ -112,15 +145,15 @@
         "joiner": "\\n",
         "joinerType": "str",
         "accumulate": false,
-        "timeout": "0.2",
+        "timeout": "0.1",
         "count": "",
         "reduceRight": false,
         "reduceExp": "",
         "reduceInit": "",
         "reduceInitType": "",
         "reduceFixup": "",
-        "x": 350,
-        "y": 80,
+        "x": 490,
+        "y": 120,
         "wires": [
             [
                 "01b3f7383b477df5"
@@ -146,8 +179,8 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 200,
-        "y": 80,
+        "x": 340,
+        "y": 120,
         "wires": [
             [
                 "87204c40cf02ba53"
@@ -165,8 +198,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 500,
-        "y": 80,
+        "x": 640,
+        "y": 120,
         "wires": [
             [
                 "c8eaa7f9deb243d2"
@@ -193,36 +226,11 @@
         "reduceInit": "",
         "reduceInitType": "",
         "reduceFixup": "",
-        "x": 650,
-        "y": 80,
+        "x": 790,
+        "y": 120,
         "wires": [
             [
                 "4551de164ed50f76"
-            ]
-        ]
-    },
-    {
-        "id": "01c9c93ad9a093b3",
-        "type": "inject",
-        "z": "efb1c3cb4ec1b96e",
-        "name": "",
-        "props": [
-            {
-                "p": "complete",
-                "v": "true",
-                "vt": "bool"
-            }
-        ],
-        "repeat": "5",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "x": 480,
-        "y": 160,
-        "wires": [
-            [
-                "c8eaa7f9deb243d2"
             ]
         ]
     },
@@ -245,8 +253,8 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 960,
-        "y": 80,
+        "x": 1100,
+        "y": 120,
         "wires": [
             [
                 "29132266ba2a58e1"
@@ -278,8 +286,8 @@
         "initialize": "// Code added here will be run once\n// whenever the node is started.\nvar prevAmps = {\n    inst: 6,\n    max: 0\n}\nflow.set(\"prevAmps\", prevAmps);",
         "finalize": "",
         "libs": [],
-        "x": 1150,
-        "y": 80,
+        "x": 1290,
+        "y": 120,
         "wires": [
             [
                 "12d675e75c03c2a4",
@@ -306,8 +314,8 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 1380,
-        "y": 60,
+        "x": 1500,
+        "y": 100,
         "wires": [
             []
         ]
@@ -331,8 +339,8 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 1380,
-        "y": 100,
+        "x": 1500,
+        "y": 140,
         "wires": [
             []
         ]
@@ -352,8 +360,8 @@
         "checkall": "true",
         "repair": false,
         "outputs": 1,
-        "x": 790,
-        "y": 80,
+        "x": 930,
+        "y": 120,
         "wires": [
             [
                 "081fa9d7b976de6e"
@@ -361,10 +369,245 @@
         ]
     },
     {
+        "id": "aaf7eef14e3bd664",
+        "type": "switch",
+        "z": "efb1c3cb4ec1b96e",
+        "name": "",
+        "property": "trigger",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "true"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 170,
+        "y": 120,
+        "wires": [
+            [
+                "9ad8ff607e56d74b"
+            ],
+            [
+                "ea765d1a2543c31b"
+            ]
+        ]
+    },
+    {
+        "id": "9ad8ff607e56d74b",
+        "type": "change",
+        "z": "efb1c3cb4ec1b96e",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "complete",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 490,
+        "y": 40,
+        "wires": [
+            [
+                "c8eaa7f9deb243d2"
+            ]
+        ]
+    },
+    {
+        "id": "929bca3eac0884b5",
+        "type": "join",
+        "z": "2984656079c534ea",
+        "name": "",
+        "mode": "custom",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "0.1",
+        "count": "",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 330,
+        "y": 100,
+        "wires": [
+            [
+                "ed01fed2bc5bd476"
+            ]
+        ]
+    },
+    {
+        "id": "ed01fed2bc5bd476",
+        "type": "function",
+        "z": "2984656079c534ea",
+        "name": "",
+        "func": "var out = {};\nvar arr = [\n    {\n        i:'/0/current',\n        o: 'l1'\n    },\n    {\n        i:'1/current',\n        o: 'l2'\n    },\n    {\n        i: '2/current',\n        o: 'l3'\n    }]\nvar keys = Object.keys(msg.payload);\n\narr.forEach(function(item) {\n    keys.forEach(function(name) {\n        if (name.indexOf(item.i) !== -1) {\n            out[item.o] = Number(msg.payload[name]);\n        }\n    })\n})\nmsg.payload = out;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 480,
+        "y": 100,
+        "wires": [
+            [
+                "7215aa973d53b82d"
+            ]
+        ]
+    },
+    {
+        "id": "7215aa973d53b82d",
+        "type": "join",
+        "z": "2984656079c534ea",
+        "name": "",
+        "mode": "custom",
+        "build": "array",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "",
+        "count": "",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 630,
+        "y": 100,
+        "wires": [
+            [
+                "6f70b631b1ed2ccd"
+            ]
+        ]
+    },
+    {
+        "id": "6f70b631b1ed2ccd",
+        "type": "switch",
+        "z": "2984656079c534ea",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "nempty"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 770,
+        "y": 100,
+        "wires": [
+            [
+                "82d6f8c38f37fb5f"
+            ]
+        ]
+    },
+    {
+        "id": "82d6f8c38f37fb5f",
+        "type": "change",
+        "z": "2984656079c534ea",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload[$count(payload) - 1]",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 940,
+        "y": 100,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "0aa11c1b04b03f84",
+        "type": "switch",
+        "z": "2984656079c534ea",
+        "name": "",
+        "property": "trigger",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "true"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 170,
+        "y": 100,
+        "wires": [
+            [
+                "1591e753ee6960d5"
+            ],
+            [
+                "929bca3eac0884b5"
+            ]
+        ]
+    },
+    {
+        "id": "1591e753ee6960d5",
+        "type": "change",
+        "z": "2984656079c534ea",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "complete",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 410,
+        "y": 40,
+        "wires": [
+            [
+                "7215aa973d53b82d"
+            ]
+        ]
+    },
+    {
         "id": "6a6ce9b1913a8316",
         "type": "mqtt in",
         "z": "f6f2187d.f17ca8",
-        "name": "Shelly 3EM",
+        "name": "Shelly 3EM Currents",
         "topic": "shellies/shellyem3-C45BBE6A7845/emeter/+/current",
         "qos": "2",
         "datatype": "auto",
@@ -373,10 +616,11 @@
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 90,
-        "y": 140,
+        "x": 110,
+        "y": 260,
         "wires": [
             [
+                "8ff756e6f6ce3d39",
                 "ca6ce1ad62163141"
             ]
         ]
@@ -387,7 +631,7 @@
         "z": "f6f2187d.f17ca8",
         "name": "Max Charge Amps",
         "env": [],
-        "x": 290,
+        "x": 450,
         "y": 140,
         "wires": [
             [
@@ -413,7 +657,7 @@
         "retentionPolicyV18Flux": "",
         "org": "nodered",
         "bucket": "nodered",
-        "x": 570,
+        "x": 730,
         "y": 120,
         "wires": []
     },
@@ -424,7 +668,7 @@
         "name": "",
         "amount": "12",
         "weight": "cumulative",
-        "x": 570,
+        "x": 730,
         "y": 60,
         "wires": [
             [
@@ -446,7 +690,7 @@
         "retentionPolicyV18Flux": "",
         "org": "nodered",
         "bucket": "nodered",
-        "x": 1100,
+        "x": 1260,
         "y": 60,
         "wires": []
     },
@@ -464,7 +708,7 @@
         "retentionPolicyV18Flux": "",
         "org": "nodered",
         "bucket": "nodered",
-        "x": 590,
+        "x": 750,
         "y": 180,
         "wires": []
     },
@@ -487,11 +731,70 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 820,
+        "x": 980,
         "y": 60,
         "wires": [
             [
                 "b6c67d19522ac87d"
+            ]
+        ]
+    },
+    {
+        "id": "ade566d3d250a94e",
+        "type": "influxdb out",
+        "z": "f6f2187d.f17ca8",
+        "influxdb": "c456f62e30a15dfe",
+        "name": "",
+        "measurement": "phaseCurrents",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "s",
+        "retentionPolicyV18Flux": "",
+        "org": "nodered",
+        "bucket": "nodered",
+        "x": 760,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "2fe445e36bfeb966",
+        "type": "inject",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "props": [
+            {
+                "p": "trigger",
+                "v": "true",
+                "vt": "bool"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payloadType": "str",
+        "x": 150,
+        "y": 340,
+        "wires": [
+            [
+                "8ff756e6f6ce3d39",
+                "ca6ce1ad62163141"
+            ]
+        ]
+    },
+    {
+        "id": "8ff756e6f6ce3d39",
+        "type": "subflow:2984656079c534ea",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "env": [],
+        "x": 440,
+        "y": 240,
+        "wires": [
+            [
+                "ade566d3d250a94e"
             ]
         ]
     }
