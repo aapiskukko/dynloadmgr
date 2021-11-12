@@ -78,11 +78,11 @@
         ],
         "out": [
             {
-                "x": 1100,
+                "x": 1240,
                 "y": 100,
                 "wires": [
                     {
-                        "id": "82d6f8c38f37fb5f",
+                        "id": "497318dd0f03a08d",
                         "port": 0
                     }
                 ]
@@ -90,7 +90,17 @@
         ],
         "env": [],
         "meta": {},
-        "color": "#DDAA99"
+        "color": "#DDAA99",
+        "status": {
+            "x": 210,
+            "y": 200,
+            "wires": [
+                {
+                    "id": "f13be55478436dfd",
+                    "port": 0
+                }
+            ]
+        }
     },
     {
         "id": "df1407b1752224f3",
@@ -544,7 +554,9 @@
         "x": 940,
         "y": 100,
         "wires": [
-            []
+            [
+                "497318dd0f03a08d"
+            ]
         ]
     },
     {
@@ -601,6 +613,37 @@
             [
                 "7215aa973d53b82d"
             ]
+        ]
+    },
+    {
+        "id": "497318dd0f03a08d",
+        "type": "function",
+        "z": "2984656079c534ea",
+        "name": "Status",
+        "func": "var now = new Date();\nvar formTime = [];\n[now.getHours(), now.getMinutes(), now.getSeconds()].forEach(num => {\n    let val = num.toLocaleString('en-US', {\n        minimumIntegerDigits: 2,\n        useGrouping: false\n    })\n    formTime.push(val);\n})\nvar time = `${formTime[0]}:${formTime[1]}:${formTime[2]}`;\n\nvar color = 'green';\nnode.status({\n    fill: color,\n    shape: 'dot',\n    text:`${time} L1 ${msg.payload.l1} L2 ${msg.payload.l2} L3 ${msg.payload.l3}`\n});\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1110,
+        "y": 100,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f13be55478436dfd",
+        "type": "status",
+        "z": "2984656079c534ea",
+        "name": "",
+        "scope": [
+            "497318dd0f03a08d"
+        ],
+        "x": 100,
+        "y": 200,
+        "wires": [
+            []
         ]
     },
     {
