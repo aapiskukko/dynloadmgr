@@ -3,4 +3,5 @@ default: build
 build:
 	docker build --no-cache -t $(NAME) -f nodered.Dockerfile .
 clean:
-	docker rmi -f $(NAME)
+	rm -rf grafana/data/*
+	rm -rf influxdb/data/*
