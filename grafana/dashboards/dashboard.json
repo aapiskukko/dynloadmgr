@@ -66,7 +66,6 @@
           },
           "decimals": 0,
           "mappings": [],
-          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -85,7 +84,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 14,
+        "h": 11,
         "w": 24,
         "x": 0,
         "y": 0
@@ -103,12 +102,13 @@
       },
       "targets": [
         {
-          "query": "from(bucket: \"nodered\") \n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)  \n  |> filter(fn: (r) => r._measurement == \"chargeMovAvg\")\n  |> map(fn: (r) => ({_value:r._value, _time:r._time, _field: \"charging current\"}))",
+          "hide": false,
+          "query": "from(bucket: v.defaultBucket) \n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)  \n  |> filter(fn: (r) => r._measurement == \"chargeMovAvg\")\n  |> map(fn: (r) => ({_value:r._value, _time:r._time, _field: \"charging current\"}))",
           "refId": "A"
         },
         {
           "hide": false,
-          "query": "from(bucket: \"nodered\") \n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)  \n  |> filter(fn: (r) => r._measurement == \"maxPhase\")\n  |> map(fn: (r) => ({_value:r._value, _time:r._time, _field: \"max phase current\"}))",
+          "query": "import \"math\"\nfrom(bucket: v.defaultBucket) \n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)  \n  |> filter(fn: (r) => r._measurement == \"phaseCurrents\" and (r._field == \"l1\" or r._field == \"l2\" or r._field == \"l3\"))\n  |> pivot(rowKey:[\"_time\"],columnKey: [\"_field\"], valueColumn: \"_value\")\n  |> map(fn: (r) => ({ r with _value: math.mMax(x: math.mMax(x: r.l1, y: r.l2),y: r.l3) }))\n  |> drop(columns: [\"l1\", \"l2\", \"l3\"])",
           "refId": "B"
         }
       ],
@@ -170,10 +170,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 9,
-        "w": 12,
+        "h": 11,
+        "w": 24,
         "x": 0,
-        "y": 14
+        "y": 11
       },
       "id": 4,
       "options": {
@@ -188,17 +188,17 @@
       },
       "targets": [
         {
-          "query": "from(bucket: v.defaultBucket) \n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)  \n  |> filter(fn: (r) => r._measurement == \"phaseCurrents\" and r._field == \"l1\")\n  |> map(fn: (r) => ({_value:r._value, _time:r._time, _field: \"L1 current\"}))",
+          "query": "from(bucket: v.defaultBucket) \n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)  \n  |> filter(fn: (r) => r._measurement == \"phaseCurrents\" and r._field == \"l1\")\n  |> map(fn: (r) => ({_value:r._value, _time:r._time, _field: \"L1\"}))",
           "refId": "A"
         },
         {
           "hide": false,
-          "query": "from(bucket: v.defaultBucket) \n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)  \n  |> filter(fn: (r) => r._measurement == \"phaseCurrents\" and r._field == \"l2\")\n  |> map(fn: (r) => ({_value:r._value, _time:r._time, _field: \"L2 current\"}))",
+          "query": "from(bucket: v.defaultBucket) \n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)  \n  |> filter(fn: (r) => r._measurement == \"phaseCurrents\" and r._field == \"l2\")\n  |> map(fn: (r) => ({_value:r._value, _time:r._time, _field: \"L2\"}))",
           "refId": "B"
         },
         {
           "hide": false,
-          "query": "from(bucket: v.defaultBucket) \n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)  \n  |> filter(fn: (r) => r._measurement == \"phaseCurrents\" and r._field == \"l3\")\n  |> map(fn: (r) => ({_value:r._value, _time:r._time, _field: \"L3 current\"}))",
+          "query": "from(bucket: v.defaultBucket) \n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)  \n  |> filter(fn: (r) => r._measurement == \"phaseCurrents\" and r._field == \"l3\")\n  |> map(fn: (r) => ({_value:r._value, _time:r._time, _field: \"L3\"}))",
           "refId": "C"
         }
       ],
