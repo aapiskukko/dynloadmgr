@@ -172,7 +172,7 @@
           "refId": "A"
         }
       ],
-      "title": "Current",
+      "title": "Charging Current",
       "type": "gauge"
     },
     {
@@ -320,7 +320,7 @@
           "refId": "A"
         }
       ],
-      "title": "Power",
+      "title": "Charging Power",
       "type": "gauge"
     }
   ],
