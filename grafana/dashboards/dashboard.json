@@ -103,12 +103,12 @@
       "targets": [
         {
           "hide": false,
-          "query": "from(bucket: v.defaultBucket) \n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)  \n  |> filter(fn: (r) => r._measurement == \"chargeMovAvg\")\n  |> map(fn: (r) => ({_value:r._value, _time:r._time, _field: \"charging current\"}))",
+          "query": "from(bucket: v.defaultBucket) \n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)  \n  |> filter(fn: (r) => r._measurement == \"chargeMovAvg\")\n  |> map(fn: (r) => ({_value:r._value, _time:r._time, _field: \"Charging current\"}))",
           "refId": "A"
         },
         {
           "hide": false,
-          "query": "import \"math\"\nfrom(bucket: v.defaultBucket) \n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)  \n  |> filter(fn: (r) => r._measurement == \"phaseCurrents\" and (r._field == \"l1\" or r._field == \"l2\" or r._field == \"l3\"))\n  |> pivot(rowKey:[\"_time\"],columnKey: [\"_field\"], valueColumn: \"_value\")\n  |> map(fn: (r) => ({ r with _value: math.mMax(x: math.mMax(x: r.l1, y: r.l2),y: r.l3) }))\n  |> drop(columns: [\"l1\", \"l2\", \"l3\"])",
+          "query": "import \"math\"\nfrom(bucket: v.defaultBucket) \n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)  \n  |> filter(fn: (r) => r._measurement == \"phaseCurrents\" and (r._field == \"l1\" or r._field == \"l2\" or r._field == \"l3\"))\n  |> pivot(rowKey:[\"_time\"],columnKey: [\"_field\"], valueColumn: \"_value\")\n  |> map(fn: (r) => ({ r with \"Max phase\": math.mMax(x: math.mMax(x: r.l1, y: r.l2),y: r.l3) }))\n  |> drop(columns: [\"l1\", \"l2\", \"l3\", \"_start\", \"_stop\", \"_measurement\"])",
           "refId": "B"
         }
       ],
@@ -137,7 +137,7 @@
             },
             "lineInterpolation": "stepBefore",
             "lineWidth": 1,
-            "pointSize": 5,
+            "pointSize": 1,
             "scaleDistribution": {
               "type": "linear"
             },

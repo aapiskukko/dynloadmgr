@@ -25,21 +25,11 @@
         ],
         "out": [
             {
-                "x": 1640,
-                "y": 100,
+                "x": 1280,
+                "y": 120,
                 "wires": [
                     {
-                        "id": "12d675e75c03c2a4",
-                        "port": 0
-                    }
-                ]
-            },
-            {
-                "x": 1640,
-                "y": 140,
-                "wires": [
-                    {
-                        "id": "3575a311f7698962",
+                        "id": "29132266ba2a58e1",
                         "port": 0
                     }
                 ]
@@ -202,7 +192,7 @@
         "type": "function",
         "z": "efb1c3cb4ec1b96e",
         "name": "Current A",
-        "func": "var brakerSize = 25;\nvar maxChargeAmps = 16;\nvar minChargeAmps = 6;\nvar amps = null;\nvar maxPhase = Math.max(...msg.payload);\nvar availAmps = Math.floor(brakerSize - maxPhase);\n\nnode.debug(`max phase amps ${maxPhase}`);\nnode.debug(`available amps ${availAmps}`);\n\nif (availAmps >= maxChargeAmps) {\n    amps = maxChargeAmps;\n    node.debug(`setting charge amps to ${amps} (max)`);\n} else if (availAmps < maxChargeAmps && availAmps >= minChargeAmps) {\n    amps = availAmps;\n    node.debug(`setting charge amps to ${amps}`);\n} else if (availAmps < minChargeAmps) {\n    amps = minChargeAmps;\n    node.debug(`available amps below ${minChargeAmps}, stopping charging`);\n}\n\nmsg.topic = \"charging amps\";\nmsg.payload = {\n    inst: amps,\n    max: maxPhase\n} \n\nreturn msg;",
+        "func": "var brakerSize = 25;\nvar maxChargeAmps = 16;\nvar minChargeAmps = 6;\nvar amps = null;\nvar maxPhase = Math.max(...msg.payload);\nvar availAmps = Math.floor(brakerSize - maxPhase);\n\nnode.debug(`max phase amps ${maxPhase}`);\nnode.debug(`available amps ${availAmps}`);\n\nif (availAmps >= maxChargeAmps) {\n    amps = maxChargeAmps;\n    node.debug(`setting charge amps to ${amps} (max)`);\n} else if (availAmps < maxChargeAmps && availAmps >= minChargeAmps) {\n    amps = availAmps;\n    node.debug(`setting charge amps to ${amps}`);\n} else if (availAmps < minChargeAmps) {\n    amps = minChargeAmps;\n    node.debug(`available amps below ${minChargeAmps}, stopping charging`);\n}\n\nmsg.topic = \"charging amps\";\nmsg.payload = amps;\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -240,34 +230,7 @@
         "y": 120,
         "wires": [
             [
-                "4551de164ed50f76"
-            ]
-        ]
-    },
-    {
-        "id": "081fa9d7b976de6e",
-        "type": "change",
-        "z": "efb1c3cb4ec1b96e",
-        "name": "",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "payload[$count(payload) - 1]",
-                "tot": "jsonata"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 1100,
-        "y": 120,
-        "wires": [
-            [
-                "29132266ba2a58e1"
+                "d2cf82c2a844831a"
             ]
         ]
     },
@@ -290,92 +253,16 @@
         "type": "function",
         "z": "efb1c3cb4ec1b96e",
         "name": "Check Input",
-        "func": "var now = new Date();\nvar formTime = [];\n[now.getHours(), now.getMinutes(), now.getSeconds()].forEach(num => {\n    let val = num.toLocaleString('en-US', {\n        minimumIntegerDigits: 2,\n        useGrouping: false\n    })\n    formTime.push(val);\n})\nvar time = `${formTime[0]}:${formTime[1]}:${formTime[2]}`;\n\nvar color = 'green';\n\nif (msg.payload == undefined) {\n    var prev = flow.get(\"prevAmps\");\n    node.error(`using old inst ${prev.inst} max ${prev.max}`);\n    msg.payload = prev;\n    color = 'yellow';\n}\nflow.set(\"prevAmps\", msg.payload);\n\nnode.status({\n    fill: color,\n    shape: 'dot',\n    text:`${time} inst ${msg.payload.inst} max ${msg.payload.max}`\n});\n\nmsg.topic = \"charge\";\nreturn msg;",
+        "func": "var shape = flow.get('shape');\nvar color = 'green';\n\nif (msg.payload == undefined) {\n    let prev = flow.get(\"prevAmps\");\n    node.debug(`using old inst ${prev}`);\n    msg.payload = prev;\n    color = 'yellow';\n}\n\nflow.set(\"prevAmps\", msg.payload);\n\nnode.status({\n    fill: color,\n    shape: shape,\n    text:`Charging ${msg.payload} A`\n});\n\nflow.set('shape', shape === 'dot' ? 'ring' : 'dot');\nmsg.topic = \"charge\";\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
-        "initialize": "// Code added here will be run once\n// whenever the node is started.\nvar prevAmps = {\n    inst: 6,\n    max: 0\n}\nflow.set(\"prevAmps\", prevAmps);",
+        "initialize": "// Code added here will be run once\n// whenever the node is started.\nvar prevAmps = 6;\nvar shape = 'dot';\nflow.set(\"prevAmps\", prevAmps);\nflow.set(\"shape\", shape);",
         "finalize": "",
         "libs": [],
-        "x": 1290,
+        "x": 1150,
         "y": 120,
         "wires": [
-            [
-                "12d675e75c03c2a4",
-                "3575a311f7698962"
-            ]
-        ]
-    },
-    {
-        "id": "12d675e75c03c2a4",
-        "type": "change",
-        "z": "efb1c3cb4ec1b96e",
-        "name": "",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "payload.inst",
-                "tot": "msg"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 1500,
-        "y": 100,
-        "wires": [
             []
-        ]
-    },
-    {
-        "id": "3575a311f7698962",
-        "type": "change",
-        "z": "efb1c3cb4ec1b96e",
-        "name": "",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "payload.max",
-                "tot": "msg"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 1500,
-        "y": 140,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "4551de164ed50f76",
-        "type": "switch",
-        "z": "efb1c3cb4ec1b96e",
-        "name": "",
-        "property": "payload",
-        "propertyType": "msg",
-        "rules": [
-            {
-                "t": "nempty"
-            }
-        ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 1,
-        "x": 930,
-        "y": 120,
-        "wires": [
-            [
-                "081fa9d7b976de6e"
-            ]
         ]
     },
     {
@@ -431,6 +318,33 @@
         "wires": [
             [
                 "c8eaa7f9deb243d2"
+            ]
+        ]
+    },
+    {
+        "id": "d2cf82c2a844831a",
+        "type": "change",
+        "z": "efb1c3cb4ec1b96e",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload[$count(payload) - 1]",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 960,
+        "y": 120,
+        "wires": [
+            [
+                "29132266ba2a58e1"
             ]
         ]
     },
@@ -620,10 +534,10 @@
         "type": "function",
         "z": "2984656079c534ea",
         "name": "Status",
-        "func": "var now = new Date();\nvar formTime = [];\n[now.getHours(), now.getMinutes(), now.getSeconds()].forEach(num => {\n    let val = num.toLocaleString('en-US', {\n        minimumIntegerDigits: 2,\n        useGrouping: false\n    })\n    formTime.push(val);\n})\nvar time = `${formTime[0]}:${formTime[1]}:${formTime[2]}`;\n\nvar color = 'green';\nnode.status({\n    fill: color,\n    shape: 'dot',\n    text:`${time} L1 ${msg.payload.l1} L2 ${msg.payload.l2} L3 ${msg.payload.l3}`\n});\nreturn msg;",
+        "func": "var color = 'green';\nvar shape = flow.get('shape');\n\nnode.status({\n    fill: color,\n    shape: shape,\n    text:`L1 ${msg.payload.l1} A, L2 ${msg.payload.l2} A, L3 ${msg.payload.l3} A`\n});\nflow.set('shape', shape === 'dot' ? 'ring' : 'dot');\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
-        "initialize": "",
+        "initialize": "// Code added here will be run once\n// whenever the node is started.\nvar shape = 'dot';\nflow.set('shape', shape)",
         "finalize": "",
         "libs": [],
         "x": 1110,
@@ -660,7 +574,7 @@
         "rh": 0,
         "inputs": 0,
         "x": 110,
-        "y": 260,
+        "y": 180,
         "wires": [
             [
                 "8ff756e6f6ce3d39",
@@ -675,34 +589,12 @@
         "name": "Max Charge Amps",
         "env": [],
         "x": 450,
-        "y": 140,
+        "y": 60,
         "wires": [
             [
-                "701314f8f2734417",
-                "9f02eefdaa5b62a8"
-            ],
-            [
-                "677f626d166e92dc"
+                "701314f8f2734417"
             ]
         ]
-    },
-    {
-        "id": "9f02eefdaa5b62a8",
-        "type": "influxdb out",
-        "z": "f6f2187d.f17ca8",
-        "influxdb": "c456f62e30a15dfe",
-        "name": "",
-        "measurement": "charge",
-        "precision": "",
-        "retentionPolicy": "",
-        "database": "database",
-        "precisionV18FluxV20": "s",
-        "retentionPolicyV18Flux": "",
-        "org": "nodered",
-        "bucket": "nodered",
-        "x": 730,
-        "y": 120,
-        "wires": []
     },
     {
         "id": "701314f8f2734417",
@@ -711,7 +603,7 @@
         "name": "",
         "amount": "12",
         "weight": "cumulative",
-        "x": 730,
+        "x": 710,
         "y": 60,
         "wires": [
             [
@@ -733,26 +625,8 @@
         "retentionPolicyV18Flux": "",
         "org": "nodered",
         "bucket": "nodered",
-        "x": 1260,
+        "x": 1240,
         "y": 60,
-        "wires": []
-    },
-    {
-        "id": "677f626d166e92dc",
-        "type": "influxdb out",
-        "z": "f6f2187d.f17ca8",
-        "influxdb": "c456f62e30a15dfe",
-        "name": "",
-        "measurement": "maxPhase",
-        "precision": "",
-        "retentionPolicy": "",
-        "database": "database",
-        "precisionV18FluxV20": "s",
-        "retentionPolicyV18Flux": "",
-        "org": "nodered",
-        "bucket": "nodered",
-        "x": 750,
-        "y": 180,
         "wires": []
     },
     {
@@ -774,7 +648,7 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 980,
+        "x": 960,
         "y": 60,
         "wires": [
             [
@@ -797,7 +671,7 @@
         "org": "nodered",
         "bucket": "nodered",
         "x": 760,
-        "y": 240,
+        "y": 160,
         "wires": []
     },
     {
@@ -819,7 +693,7 @@
         "topic": "",
         "payloadType": "str",
         "x": 150,
-        "y": 340,
+        "y": 100,
         "wires": [
             [
                 "8ff756e6f6ce3d39",
@@ -834,7 +708,7 @@
         "name": "",
         "env": [],
         "x": 440,
-        "y": 240,
+        "y": 160,
         "wires": [
             [
                 "ade566d3d250a94e"
