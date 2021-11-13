@@ -116,6 +116,7 @@
       ],
       "title": "Charging Current",
       "transformations": [],
+      "transparent": true,
       "type": "timeseries"
     },
     {
@@ -173,6 +174,7 @@
         }
       ],
       "title": "Charging Current",
+      "transparent": true,
       "type": "gauge"
     },
     {
@@ -264,6 +266,7 @@
         }
       ],
       "title": "Phase Currents",
+      "transparent": true,
       "type": "timeseries"
     },
     {
@@ -321,6 +324,7 @@
         }
       ],
       "title": "Charging Power",
+      "transparent": true,
       "type": "gauge"
     }
   ],
