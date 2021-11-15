@@ -105,7 +105,7 @@
       "targets": [
         {
           "hide": false,
-          "query": "from(bucket: v.defaultBucket) \n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)  \n  |> filter(fn: (r) => r._measurement == \"chargeMovAvg\")\n  |> map(fn: (r) => ({_value:r._value, _time:r._time, _field: \"Charging current\"}))",
+          "query": "from(bucket: v.defaultBucket) \n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)  \n  |> filter(fn: (r) => r._measurement == \"chargeCurrent\")\n  |> map(fn: (r) => ({_value:r._value, _time:r._time, _field: \"Charging current\"}))",
           "refId": "A"
         },
         {
@@ -114,7 +114,7 @@
           "refId": "B"
         }
       ],
-      "title": "Charging Current",
+      "title": "Charge Current",
       "transformations": [],
       "transparent": true,
       "type": "timeseries"
@@ -169,7 +169,7 @@
       "pluginVersion": "8.2.3",
       "targets": [
         {
-          "query": "from(bucket: v.defaultBucket) \n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)  \n  |> filter(fn: (r) => r._measurement == \"chargeMovAvg\")\n  |> map(fn: (r) => ({_value:r._value, _time:r._time, _field: \"Charging current\"}))",
+          "query": "from(bucket: v.defaultBucket) \n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)  \n  |> filter(fn: (r) => r._measurement == \"chargeCurrent\")\n  |> map(fn: (r) => ({_value:r._value, _time:r._time, _field: \"Charging current\"}))",
           "refId": "A"
         }
       ],
@@ -319,7 +319,7 @@
       "pluginVersion": "8.2.3",
       "targets": [
         {
-          "query": "toKws = (curr) => 3.0 * ((curr * 230.0) / 1000.0)\n\nfrom(bucket: v.defaultBucket) \n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)  \n  |> filter(fn: (r) => r._measurement == \"chargeMovAvg\")\n  |> map(fn: (r) => ({_value: toKws(curr: r._value), _time:r._time, _field: \"Charging current\"}))",
+          "query": "toKws = (curr) => 3.0 * ((curr * 230.0) / 1000.0)\n\nfrom(bucket: v.defaultBucket) \n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)  \n  |> filter(fn: (r) => r._measurement == \"chargeCurrent\")\n  |> map(fn: (r) => ({_value: toKws(curr: r._value), _time:r._time, _field: \"Charging current\"}))",
           "refId": "A"
         }
       ],

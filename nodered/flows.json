@@ -9,27 +9,27 @@
     {
         "id": "efb1c3cb4ec1b96e",
         "type": "subflow",
-        "name": "Current Charge",
+        "name": "Charge Current",
         "info": "",
         "category": "",
         "in": [
             {
                 "x": 60,
-                "y": 120,
+                "y": 100,
                 "wires": [
                     {
-                        "id": "aaf7eef14e3bd664"
+                        "id": "01b3f7383b477df5"
                     }
                 ]
             }
         ],
         "out": [
             {
-                "x": 1280,
-                "y": 120,
+                "x": 940,
+                "y": 100,
                 "wires": [
                     {
-                        "id": "29132266ba2a58e1",
+                        "id": "ce132e23a5f6a979",
                         "port": 0
                     }
                 ]
@@ -40,7 +40,7 @@
         "color": "#DDAA99",
         "status": {
             "x": 230,
-            "y": 260,
+            "y": 180,
             "wires": [
                 {
                     "id": "45e7a020507cab3a",
@@ -93,6 +93,49 @@
         }
     },
     {
+        "id": "cb6405dfef5678b9",
+        "type": "subflow",
+        "name": "3 Phase",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 60,
+                "y": 80,
+                "wires": [
+                    {
+                        "id": "e727d8256d3693b3"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 800,
+                "y": 80,
+                "wires": [
+                    {
+                        "id": "d3492816a859ba40",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [],
+        "meta": {},
+        "color": "#DDAA99",
+        "status": {
+            "x": 220,
+            "y": 160,
+            "wires": [
+                {
+                    "id": "5d04a38ddacc9d16",
+                    "port": 0
+                }
+            ]
+        }
+    },
+    {
         "id": "df1407b1752224f3",
         "type": "mqtt-broker",
         "name": "",
@@ -133,104 +176,21 @@
         "rejectUnauthorized": false
     },
     {
-        "id": "87204c40cf02ba53",
-        "type": "join",
-        "z": "efb1c3cb4ec1b96e",
-        "name": "",
-        "mode": "custom",
-        "build": "array",
-        "property": "payload",
-        "propertyType": "msg",
-        "key": "topic",
-        "joiner": "\\n",
-        "joinerType": "str",
-        "accumulate": false,
-        "timeout": "0.1",
-        "count": "",
-        "reduceRight": false,
-        "reduceExp": "",
-        "reduceInit": "",
-        "reduceInitType": "",
-        "reduceFixup": "",
-        "x": 490,
-        "y": 120,
-        "wires": [
-            [
-                "01b3f7383b477df5"
-            ]
-        ]
-    },
-    {
-        "id": "ea765d1a2543c31b",
-        "type": "change",
-        "z": "efb1c3cb4ec1b96e",
-        "name": "Number",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "$number(msg.payload)",
-                "tot": "jsonata"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 340,
-        "y": 120,
-        "wires": [
-            [
-                "87204c40cf02ba53"
-            ]
-        ]
-    },
-    {
         "id": "01b3f7383b477df5",
         "type": "function",
         "z": "efb1c3cb4ec1b96e",
-        "name": "Current A",
-        "func": "var brakerSize = 25;\nvar maxChargeAmps = 16;\nvar minChargeAmps = 6;\nvar amps = null;\nvar maxPhase = Math.max(...msg.payload);\nvar availAmps = Math.floor(brakerSize - maxPhase);\n\nnode.debug(`max phase amps ${maxPhase}`);\nnode.debug(`available amps ${availAmps}`);\n\nif (availAmps >= maxChargeAmps) {\n    amps = maxChargeAmps;\n    node.debug(`setting charge amps to ${amps} (max)`);\n} else if (availAmps < maxChargeAmps && availAmps >= minChargeAmps) {\n    amps = availAmps;\n    node.debug(`setting charge amps to ${amps}`);\n} else if (availAmps < minChargeAmps) {\n    amps = minChargeAmps;\n    node.debug(`available amps below ${minChargeAmps}, stopping charging`);\n}\n\nmsg.topic = \"charging amps\";\nmsg.payload = amps;\n\nreturn msg;",
+        "name": "Charge Current",
+        "func": "var brakerSize = 25;\nvar maxChargeAmps = 16;\nvar minChargeAmps = 6;\nvar amps = null;\nvar maxPhase = msg.payload.value;\nvar availAmps = Math.floor(brakerSize - maxPhase);\n\nnode.debug(`max phase amps ${maxPhase}`);\nnode.debug(`available amps ${availAmps}`);\n\nif (availAmps >= maxChargeAmps) {\n    amps = maxChargeAmps;\n    node.debug(`setting charge amps to ${amps} (max)`);\n} else if (availAmps < maxChargeAmps && availAmps >= minChargeAmps) {\n    amps = availAmps;\n    node.debug(`setting charge amps to ${amps}`);\n} else if (availAmps < minChargeAmps) {\n    amps = minChargeAmps;\n    node.debug(`available amps below ${minChargeAmps}, stopping charging`);\n}\n\nmsg.topic = \"charging amps\";\nmsg.payload = amps;\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 640,
-        "y": 120,
+        "x": 200,
+        "y": 100,
         "wires": [
             [
-                "c8eaa7f9deb243d2"
-            ]
-        ]
-    },
-    {
-        "id": "c8eaa7f9deb243d2",
-        "type": "join",
-        "z": "efb1c3cb4ec1b96e",
-        "name": "",
-        "mode": "custom",
-        "build": "array",
-        "property": "payload",
-        "propertyType": "msg",
-        "key": "topic",
-        "joiner": "\\n",
-        "joinerType": "str",
-        "accumulate": false,
-        "timeout": "",
-        "count": "",
-        "reduceRight": false,
-        "reduceExp": "",
-        "reduceInit": "",
-        "reduceInitType": "",
-        "reduceFixup": "",
-        "x": 790,
-        "y": 120,
-        "wires": [
-            [
-                "d2cf82c2a844831a"
+                "29132266ba2a58e1"
             ]
         ]
     },
@@ -243,7 +203,7 @@
             "29132266ba2a58e1"
         ],
         "x": 100,
-        "y": 260,
+        "y": 180,
         "wires": [
             []
         ]
@@ -252,86 +212,47 @@
         "id": "29132266ba2a58e1",
         "type": "function",
         "z": "efb1c3cb4ec1b96e",
-        "name": "Check Input",
+        "name": "Use Old",
         "func": "var shape = flow.get('shape');\nvar color = 'green';\n\nif (msg.payload == undefined) {\n    let prev = flow.get(\"prevAmps\");\n    node.debug(`using old inst ${prev}`);\n    msg.payload = prev;\n    color = 'yellow';\n}\n\nflow.set(\"prevAmps\", msg.payload);\n\nnode.status({\n    fill: color,\n    shape: shape,\n    text:`Charging ${msg.payload} A`\n});\n\nflow.set('shape', shape === 'dot' ? 'ring' : 'dot');\nmsg.topic = \"charge\";\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "// Code added here will be run once\n// whenever the node is started.\nvar prevAmps = 6;\nvar shape = 'dot';\nflow.set(\"prevAmps\", prevAmps);\nflow.set(\"shape\", shape);",
         "finalize": "",
         "libs": [],
-        "x": 1150,
-        "y": 120,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "aaf7eef14e3bd664",
-        "type": "switch",
-        "z": "efb1c3cb4ec1b96e",
-        "name": "",
-        "property": "trigger",
-        "propertyType": "msg",
-        "rules": [
-            {
-                "t": "true"
-            },
-            {
-                "t": "else"
-            }
-        ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 2,
-        "x": 170,
-        "y": 120,
+        "x": 380,
+        "y": 100,
         "wires": [
             [
-                "9ad8ff607e56d74b"
-            ],
-            [
-                "ea765d1a2543c31b"
+                "115c2ac026ab67e0"
             ]
         ]
     },
     {
-        "id": "9ad8ff607e56d74b",
-        "type": "change",
+        "id": "115c2ac026ab67e0",
+        "type": "moving-average",
         "z": "efb1c3cb4ec1b96e",
         "name": "",
-        "rules": [
-            {
-                "t": "set",
-                "p": "complete",
-                "pt": "msg",
-                "to": "true",
-                "tot": "bool"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 490,
-        "y": 40,
+        "amount": "12",
+        "weight": "cumulative",
+        "x": 610,
+        "y": 100,
         "wires": [
             [
-                "c8eaa7f9deb243d2"
+                "ce132e23a5f6a979"
             ]
         ]
     },
     {
-        "id": "d2cf82c2a844831a",
+        "id": "ce132e23a5f6a979",
         "type": "change",
         "z": "efb1c3cb4ec1b96e",
-        "name": "",
+        "name": "Round",
         "rules": [
             {
                 "t": "set",
                 "p": "payload",
                 "pt": "msg",
-                "to": "payload[$count(payload) - 1]",
+                "to": "$round(payload)",
                 "tot": "jsonata"
             }
         ],
@@ -340,12 +261,10 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 960,
-        "y": 120,
+        "x": 830,
+        "y": 100,
         "wires": [
-            [
-                "29132266ba2a58e1"
-            ]
+            []
         ]
     },
     {
@@ -561,6 +480,109 @@
         ]
     },
     {
+        "id": "a55bcc5416296677",
+        "type": "delay",
+        "z": "cb6405dfef5678b9",
+        "name": "",
+        "pauseType": "rate",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "5",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": true,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 520,
+        "y": 80,
+        "wires": [
+            [
+                "d3492816a859ba40"
+            ]
+        ]
+    },
+    {
+        "id": "e727d8256d3693b3",
+        "type": "join",
+        "z": "cb6405dfef5678b9",
+        "name": "",
+        "mode": "custom",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "0.1",
+        "count": "",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 190,
+        "y": 80,
+        "wires": [
+            [
+                "7e199a522a05343e"
+            ]
+        ]
+    },
+    {
+        "id": "7e199a522a05343e",
+        "type": "function",
+        "z": "cb6405dfef5678b9",
+        "name": "",
+        "func": "var out = {};\nvar arr = [\n    {\n        i:'/0/current',\n        o: 'l1'\n    },\n    {\n        i:'1/current',\n        o: 'l2'\n    },\n    {\n        i: '2/current',\n        o: 'l3'\n    }]\nvar keys = Object.keys(msg.payload);\n\narr.forEach(function(item) {\n    keys.forEach(function(name) {\n        if (name.indexOf(item.i) !== -1) {\n            out[item.o] = Number(msg.payload[name]);\n        }\n    })\n})\nmsg.payload = out;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 80,
+        "wires": [
+            [
+                "a55bcc5416296677"
+            ]
+        ]
+    },
+    {
+        "id": "d3492816a859ba40",
+        "type": "function",
+        "z": "cb6405dfef5678b9",
+        "name": "Status",
+        "func": "var color = 'green';\nvar shape = flow.get('shape');\n\nnode.status({\n    fill: color,\n    shape: shape,\n    text:`${msg.payload.l1} ${msg.payload.l2} ${msg.payload.l3}`\n});\nflow.set('shape', shape === 'dot' ? 'ring' : 'dot');\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "// Code added here will be run once\n// whenever the node is started.\nvar shape = 'dot';\nflow.set('shape', shape)",
+        "finalize": "",
+        "libs": [],
+        "x": 690,
+        "y": 80,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5d04a38ddacc9d16",
+        "type": "status",
+        "z": "cb6405dfef5678b9",
+        "name": "",
+        "scope": [
+            "d3492816a859ba40"
+        ],
+        "x": 100,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
         "id": "6a6ce9b1913a8316",
         "type": "mqtt in",
         "z": "f6f2187d.f17ca8",
@@ -577,8 +599,7 @@
         "y": 180,
         "wires": [
             [
-                "8ff756e6f6ce3d39",
-                "ca6ce1ad62163141"
+                "816262a51bcc5420"
             ]
         ]
     },
@@ -586,28 +607,13 @@
         "id": "ca6ce1ad62163141",
         "type": "subflow:efb1c3cb4ec1b96e",
         "z": "f6f2187d.f17ca8",
-        "name": "Max Charge Amps",
-        "env": [],
-        "x": 450,
-        "y": 60,
-        "wires": [
-            [
-                "701314f8f2734417"
-            ]
-        ]
-    },
-    {
-        "id": "701314f8f2734417",
-        "type": "moving-average",
-        "z": "f6f2187d.f17ca8",
         "name": "",
-        "amount": "12",
-        "weight": "cumulative",
-        "x": 710,
-        "y": 60,
+        "env": [],
+        "x": 660,
+        "y": 180,
         "wires": [
             [
-                "84e87b66aed444f5"
+                "b6c67d19522ac87d"
             ]
         ]
     },
@@ -617,7 +623,7 @@
         "z": "f6f2187d.f17ca8",
         "influxdb": "c456f62e30a15dfe",
         "name": "",
-        "measurement": "chargeMovAvg",
+        "measurement": "chargeCurrent",
         "precision": "",
         "retentionPolicy": "",
         "database": "database",
@@ -625,36 +631,9 @@
         "retentionPolicyV18Flux": "",
         "org": "nodered",
         "bucket": "nodered",
-        "x": 1240,
-        "y": 60,
+        "x": 940,
+        "y": 180,
         "wires": []
-    },
-    {
-        "id": "84e87b66aed444f5",
-        "type": "change",
-        "z": "f6f2187d.f17ca8",
-        "name": "",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "$round(payload)",
-                "tot": "jsonata"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 960,
-        "y": 60,
-        "wires": [
-            [
-                "b6c67d19522ac87d"
-            ]
-        ]
     },
     {
         "id": "ade566d3d250a94e",
@@ -670,48 +649,41 @@
         "retentionPolicyV18Flux": "",
         "org": "nodered",
         "bucket": "nodered",
-        "x": 760,
-        "y": 160,
+        "x": 580,
+        "y": 120,
         "wires": []
     },
     {
-        "id": "2fe445e36bfeb966",
-        "type": "inject",
+        "id": "816262a51bcc5420",
+        "type": "subflow:cb6405dfef5678b9",
         "z": "f6f2187d.f17ca8",
         "name": "",
-        "props": [
-            {
-                "p": "trigger",
-                "v": "true",
-                "vt": "bool"
-            }
-        ],
-        "repeat": "5",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payloadType": "str",
-        "x": 150,
-        "y": 100,
+        "env": [],
+        "x": 300,
+        "y": 180,
         "wires": [
             [
-                "8ff756e6f6ce3d39",
-                "ca6ce1ad62163141"
+                "5c848530d6f462bb",
+                "ade566d3d250a94e"
             ]
         ]
     },
     {
-        "id": "8ff756e6f6ce3d39",
-        "type": "subflow:2984656079c534ea",
+        "id": "5c848530d6f462bb",
+        "type": "function",
         "z": "f6f2187d.f17ca8",
-        "name": "",
-        "env": [],
-        "x": 440,
-        "y": 160,
+        "name": "Max Current",
+        "func": "var sortable = [];\nfor (var phase in msg.payload) {\n    sortable.push([phase, msg.payload[phase]]);\n}\n\nsortable.sort(function(a, b) {\n    return b[1] - a[1];\n});\nmsg.payload = {\n    phase: sortable[0][0],\n    value: sortable[0][1]\n}\nnode.status({\n    fill: 'green',\n    shape: 'dot',\n    text:`${msg.payload.phase.toUpperCase()} ${msg.payload.value}`\n});\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 470,
+        "y": 180,
         "wires": [
             [
-                "ade566d3d250a94e"
+                "ca6ce1ad62163141"
             ]
         ]
     }
