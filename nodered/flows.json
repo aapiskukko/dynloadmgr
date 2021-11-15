@@ -25,7 +25,7 @@
         ],
         "out": [
             {
-                "x": 940,
+                "x": 920,
                 "y": 100,
                 "wires": [
                     {
@@ -169,14 +169,14 @@
         "id": "29132266ba2a58e1",
         "type": "function",
         "z": "efb1c3cb4ec1b96e",
-        "name": "Use Old",
-        "func": "var color = 'green';\n\nif (msg.payload == undefined) {\n    let prev = flow.get(\"prevAmps\");\n    node.debug(`using old inst ${prev}`);\n    msg.payload = prev;\n    color = 'yellow';\n}\n\nflow.set(\"prevAmps\", msg.payload);\n\nnode.status({\n    fill: color,\n    shape: 'dot',\n    text:`Can charge ${msg.payload} A`\n});\n\nmsg.topic = \"charge\";\nreturn msg;",
+        "name": "Status",
+        "func": "node.status({\n    fill: 'green',\n    shape: 'dot',\n    text:`Can charge ${msg.payload} A`\n});\n\nmsg.topic = \"charge\";\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
-        "initialize": "// Code added here will be run once\n// whenever the node is started.\nvar prevAmps = 6;\nflow.set(\"prevAmps\", prevAmps);",
+        "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 380,
+        "x": 370,
         "y": 100,
         "wires": [
             [
@@ -191,7 +191,7 @@
         "name": "",
         "amount": "12",
         "weight": "cumulative",
-        "x": 610,
+        "x": 590,
         "y": 100,
         "wires": [
             [
@@ -218,7 +218,7 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 830,
+        "x": 810,
         "y": 100,
         "wires": [
             []
