@@ -25,11 +25,11 @@
         ],
         "out": [
             {
-                "x": 920,
+                "x": 820,
                 "y": 100,
                 "wires": [
                     {
-                        "id": "ce132e23a5f6a979",
+                        "id": "29132266ba2a58e1",
                         "port": 0
                     }
                 ]
@@ -93,6 +93,178 @@
         }
     },
     {
+        "id": "017d5dad7f46622e",
+        "type": "subflow",
+        "name": "Killswitch Current",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 80,
+                "y": 60,
+                "wires": [
+                    {
+                        "id": "975816aaf55ab39d"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 760,
+                "y": 60,
+                "wires": [
+                    {
+                        "id": "ab3c55f7ff3ece2e",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [],
+        "meta": {},
+        "color": "#DDAA99",
+        "status": {
+            "x": 240,
+            "y": 140,
+            "wires": [
+                {
+                    "id": "f39ab9d5ddbeb229",
+                    "port": 0
+                }
+            ]
+        }
+    },
+    {
+        "id": "2fd256c6966e229b",
+        "type": "subflow",
+        "name": "Go-eCharger Get State",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 60,
+                "y": 60,
+                "wires": [
+                    {
+                        "id": "42468243cfcf83f1"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 620,
+                "y": 60,
+                "wires": [
+                    {
+                        "id": "82879aea8ce581e8",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [],
+        "meta": {},
+        "color": "#DDAA99",
+        "status": {
+            "x": 220,
+            "y": 120,
+            "wires": [
+                {
+                    "id": "54a08cee2ec39c85",
+                    "port": 0
+                }
+            ]
+        }
+    },
+    {
+        "id": "e0df0ca748936d99",
+        "type": "subflow",
+        "name": "Go-eCharger Set Current",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 80,
+                "y": 80,
+                "wires": [
+                    {
+                        "id": "26a7bb8f698df819"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 620,
+                "y": 80,
+                "wires": [
+                    {
+                        "id": "fd703550e95ab36f",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [],
+        "meta": {},
+        "color": "#DDAA99",
+        "status": {
+            "x": 240,
+            "y": 160,
+            "wires": [
+                {
+                    "id": "462856bded12346e",
+                    "port": 0
+                }
+            ]
+        }
+    },
+    {
+        "id": "39e4f6d7bc65b2db",
+        "type": "subflow",
+        "name": "Go-eCharger Set State",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 60,
+                "y": 60,
+                "wires": [
+                    {
+                        "id": "ad56b12f4b0267e7"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 600,
+                "y": 60,
+                "wires": [
+                    {
+                        "id": "6c60cc0e10dbb554",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [],
+        "meta": {},
+        "color": "#DDAA99",
+        "status": {
+            "x": 210,
+            "y": 140,
+            "wires": [
+                {
+                    "id": "0c116f1b76d5bc61",
+                    "port": 0
+                }
+            ]
+        }
+    },
+    {
         "id": "df1407b1752224f3",
         "type": "mqtt-broker",
         "name": "",
@@ -137,17 +309,17 @@
         "type": "function",
         "z": "efb1c3cb4ec1b96e",
         "name": "Charge Current",
-        "func": "var brakerSize = 25;\nvar maxChargeAmps = 16;\nvar minChargeAmps = 6;\nvar amps = null;\nvar maxPhase = msg.payload.value;\nvar availAmps = Math.floor(brakerSize - maxPhase);\n\nnode.debug(`max phase amps ${maxPhase}`);\nnode.debug(`available amps ${availAmps}`);\n\nif (availAmps >= maxChargeAmps) {\n    amps = maxChargeAmps;\n    node.debug(`setting charge amps to ${amps} (max)`);\n} else if (availAmps < maxChargeAmps && availAmps >= minChargeAmps) {\n    amps = availAmps;\n    node.debug(`setting charge amps to ${amps}`);\n} else if (availAmps < minChargeAmps) {\n    amps = minChargeAmps;\n    node.debug(`available amps below ${minChargeAmps}, stopping charging`);\n}\n\nmsg.topic = \"charging amps\";\nmsg.payload = amps;\n\nreturn msg;",
+        "func": "var brakerSize = 25;\nvar maxChargeAmps = 16;\nvar minChargeAmps = 6;\nvar amps = null;\nvar maxPhase = msg.payload.value;\nvar prevAmps = flow.get('prevAmps');\nvar availAmps = Math.round(brakerSize - maxPhase) + prevAmps;\n\nnode.error(`max phase amps ${maxPhase}`);\nnode.error(`available amps ${availAmps}`);\n\nif (availAmps >= maxChargeAmps) {\n    amps = maxChargeAmps;\n    node.error(`setting charge amps to ${amps} (max)`);\n} else if (availAmps < maxChargeAmps && availAmps >= minChargeAmps) {\n    amps = availAmps;\n    node.error(`setting charge amps to ${amps}`);\n} else if (availAmps < minChargeAmps) {\n    amps = minChargeAmps;\n    node.error(`available amps below ${minChargeAmps}, stopping charging`);\n}\n\nmsg.topic = 'amps';\nmsg.payload = amps;\nflow.set('prevAmps', amps);\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
-        "initialize": "",
+        "initialize": "// Code added here will be run once\n// whenever the node is started.\nvar prevAmps = flow.set(\"prevAmps\", 6);",
         "finalize": "",
         "libs": [],
         "x": 200,
         "y": 100,
         "wires": [
             [
-                "29132266ba2a58e1"
+                "115c2ac026ab67e0"
             ]
         ]
     },
@@ -170,28 +342,26 @@
         "type": "function",
         "z": "efb1c3cb4ec1b96e",
         "name": "Status",
-        "func": "node.status({\n    fill: 'green',\n    shape: 'dot',\n    text:`Can charge ${msg.payload} A`\n});\n\nmsg.topic = \"charge\";\nreturn msg;",
+        "func": "node.status({\n    fill: 'green',\n    shape: 'dot',\n    text:`Can charge ${msg.payload} A`\n});\n\nmsg.curr = msg.payload;\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 370,
+        "x": 710,
         "y": 100,
         "wires": [
-            [
-                "115c2ac026ab67e0"
-            ]
+            []
         ]
     },
     {
         "id": "115c2ac026ab67e0",
         "type": "moving-average",
         "z": "efb1c3cb4ec1b96e",
-        "name": "",
+        "name": "1 min average",
         "amount": "12",
         "weight": "cumulative",
-        "x": 590,
+        "x": 400,
         "y": 100,
         "wires": [
             [
@@ -218,10 +388,12 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 810,
+        "x": 570,
         "y": 100,
         "wires": [
-            []
+            [
+                "29132266ba2a58e1"
+            ]
         ]
     },
     {
@@ -328,6 +500,293 @@
         ]
     },
     {
+        "id": "a0fd10c193de8961",
+        "type": "moving-average",
+        "z": "017d5dad7f46622e",
+        "name": "1 min average",
+        "amount": "12",
+        "weight": "cumulative",
+        "x": 480,
+        "y": 60,
+        "wires": [
+            [
+                "ab3c55f7ff3ece2e"
+            ]
+        ]
+    },
+    {
+        "id": "f39ab9d5ddbeb229",
+        "type": "status",
+        "z": "017d5dad7f46622e",
+        "name": "",
+        "scope": null,
+        "x": 120,
+        "y": 140,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ab3c55f7ff3ece2e",
+        "type": "function",
+        "z": "017d5dad7f46622e",
+        "name": "Status",
+        "func": "node.status({\n    fill: 'green',\n    shape: 'dot',\n    text:`Average load ${msg.payload.toFixed(2)} A`\n});\n\nmsg.topic = \"killswitch\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 650,
+        "y": 60,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "975816aaf55ab39d",
+        "type": "change",
+        "z": "017d5dad7f46622e",
+        "name": "",
+        "rules": [
+            {
+                "t": "move",
+                "p": "payload.value",
+                "pt": "msg",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 250,
+        "y": 60,
+        "wires": [
+            [
+                "a0fd10c193de8961"
+            ]
+        ]
+    },
+    {
+        "id": "2f74981939290283",
+        "type": "http request",
+        "z": "2fd256c6966e229b",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "senderr": false,
+        "x": 330,
+        "y": 60,
+        "wires": [
+            [
+                "82879aea8ce581e8"
+            ]
+        ]
+    },
+    {
+        "id": "42468243cfcf83f1",
+        "type": "function",
+        "z": "2fd256c6966e229b",
+        "name": "URL",
+        "func": "msg.url = `http://go-echarger/api/status?filter=car`;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 170,
+        "y": 60,
+        "wires": [
+            [
+                "2f74981939290283"
+            ]
+        ]
+    },
+    {
+        "id": "54a08cee2ec39c85",
+        "type": "status",
+        "z": "2fd256c6966e229b",
+        "name": "",
+        "scope": [
+            "82879aea8ce581e8"
+        ],
+        "x": 100,
+        "y": 120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "82879aea8ce581e8",
+        "type": "function",
+        "z": "2fd256c6966e229b",
+        "name": "Status",
+        "func": "var color = 'green';\nvar text = null;\nvar status = null;\n\nif (msg.statusCode !== 200) {\n    color = 'red';\n    text = `HTTP ${msg.statusCode}: ${msg.payload}`\n} else {\n    status = JSON.parse(msg.payload);\n    if (status.car === null) {\n        text = 'Go-eCharger internal error';\n        color = 'red';\n        msg.payload = 'error';\n    } else if (status.car === 0) {\n        text = 'Go-eCharger unknown error';\n        color = 'red';\n        msg.payload = 'error';\n    } else if (status.car === 1) {\n        text = 'Idle';\n        color = 'green';\n        msg.payload = 'idle';\n    } else if (status.car === 2) {\n        text = 'Charging';\n        color = 'green';\n        msg.payload = 'charging';\n    } else if (status.car === 3) {\n        text = 'Wait car';\n        color = 'green';\n        msg.payload = 'waitCar';\n    } else if (status.car === 4) {\n        text = 'Complete';\n        color = 'green';\n    } else if (status.car === 5) {\n        text = 'Error';\n        color = 'red';\n        msg.payload = 'error';\n    } else {\n        text = 'Unknown state';\n        color = 'red';\n        msg.payload = 'error';\n    }\n} \n\nnode.status({\n    fill: color,\n    shape: 'dot',\n    text: text\n});\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 490,
+        "y": 60,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "50c1d4f8f611841b",
+        "type": "http request",
+        "z": "e0df0ca748936d99",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "senderr": false,
+        "x": 350,
+        "y": 80,
+        "wires": [
+            [
+                "fd703550e95ab36f"
+            ]
+        ]
+    },
+    {
+        "id": "26a7bb8f698df819",
+        "type": "function",
+        "z": "e0df0ca748936d99",
+        "name": "URL",
+        "func": "msg.url = `http://go-echarger/api/set?amp=${msg.curr}`;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 190,
+        "y": 80,
+        "wires": [
+            [
+                "50c1d4f8f611841b"
+            ]
+        ]
+    },
+    {
+        "id": "fd703550e95ab36f",
+        "type": "function",
+        "z": "e0df0ca748936d99",
+        "name": "Status",
+        "func": "var color = 'green';\nvar text = null;\n\nif (msg.statusCode !== 200) {\n    color = 'red';\n    text = `HTTP ${msg.statusCode}: ${msg.payload}`\n} else {\n    var status = JSON.parse(msg.payload);\n    if (status.amp) {\n        color = 'green';\n        text = `Set ${msg.curr} A`\n    } else {\n        color = 'red';\n        text = `${status}`\n    }\n} \n\nnode.status({\n    fill: color,\n    shape: 'dot',\n    text: text\n});\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 510,
+        "y": 80,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "462856bded12346e",
+        "type": "status",
+        "z": "e0df0ca748936d99",
+        "name": "",
+        "scope": [
+            "fd703550e95ab36f"
+        ],
+        "x": 120,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "71cd034f4629ade0",
+        "type": "http request",
+        "z": "39e4f6d7bc65b2db",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "senderr": false,
+        "x": 330,
+        "y": 60,
+        "wires": [
+            [
+                "6c60cc0e10dbb554"
+            ]
+        ]
+    },
+    {
+        "id": "ad56b12f4b0267e7",
+        "type": "function",
+        "z": "39e4f6d7bc65b2db",
+        "name": "URL",
+        "func": "msg.url = `http://go-echarger/api/set?amp=${msg.curr}`;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 170,
+        "y": 60,
+        "wires": [
+            [
+                "71cd034f4629ade0"
+            ]
+        ]
+    },
+    {
+        "id": "6c60cc0e10dbb554",
+        "type": "function",
+        "z": "39e4f6d7bc65b2db",
+        "name": "Status",
+        "func": "var color = 'green';\nvar text = null;\n\nif (msg.statusCode !== 200) {\n    color = 'red';\n    text = `HTTP ${msg.statusCode}: ${msg.payload}`\n} else {\n    var status = JSON.parse(msg.payload);\n    if (status.amp) {\n        color = 'green';\n        text = `Set ${msg.curr} A`\n    } else {\n        color = 'red';\n        text = `${status}`\n    }\n} \n\nnode.status({\n    fill: color,\n    shape: 'dot',\n    text: text\n});\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 490,
+        "y": 60,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "0c116f1b76d5bc61",
+        "type": "status",
+        "z": "39e4f6d7bc65b2db",
+        "name": "",
+        "scope": [
+            "6c60cc0e10dbb554"
+        ],
+        "x": 100,
+        "y": 140,
+        "wires": [
+            []
+        ]
+    },
+    {
         "id": "6a6ce9b1913a8316",
         "type": "mqtt in",
         "z": "f6f2187d.f17ca8",
@@ -358,7 +817,8 @@
         "y": 180,
         "wires": [
             [
-                "b6c67d19522ac87d"
+                "b6c67d19522ac87d",
+                "46ac54afcd1bb2ef"
             ]
         ]
     },
@@ -376,8 +836,8 @@
         "retentionPolicyV18Flux": "",
         "org": "nodered",
         "bucket": "nodered",
-        "x": 940,
-        "y": 180,
+        "x": 960,
+        "y": 120,
         "wires": []
     },
     {
@@ -418,7 +878,7 @@
         "type": "function",
         "z": "f6f2187d.f17ca8",
         "name": "Max Current",
-        "func": "var sortable = [];\nfor (var phase in msg.payload) {\n    sortable.push([phase, msg.payload[phase]]);\n}\n\nsortable.sort(function(a, b) {\n    return b[1] - a[1];\n});\nmsg.payload = {\n    phase: sortable[0][0],\n    value: sortable[0][1]\n}\nnode.status({\n    fill: 'green',\n    shape: 'dot',\n    text:`${msg.payload.phase.toUpperCase()} ${msg.payload.value}`\n});\nreturn msg;",
+        "func": "var sortable = [];\nfor (var phase in msg.payload) {\n    sortable.push([phase, msg.payload[phase]]);\n}\n\nsortable.sort(function(a, b) {\n    return b[1] - a[1];\n});\nmsg.payload = {\n    phase: sortable[0][0],\n    value: sortable[0][1]\n}\nnode.status({\n    fill: 'green',\n    shape: 'dot',\n    text:`${msg.payload.phase.toUpperCase()} ${msg.payload.value} A`\n});\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -428,7 +888,166 @@
         "y": 180,
         "wires": [
             [
-                "ca6ce1ad62163141"
+                "ca6ce1ad62163141",
+                "f9be9ed9ced5073c"
+            ]
+        ]
+    },
+    {
+        "id": "f9be9ed9ced5073c",
+        "type": "subflow:017d5dad7f46622e",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "env": [],
+        "x": 660,
+        "y": 280,
+        "wires": [
+            [
+                "a2e712151ac5b616"
+            ]
+        ]
+    },
+    {
+        "id": "a2e712151ac5b616",
+        "type": "switch",
+        "z": "f6f2187d.f17ca8",
+        "name": "Braker Overload",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "gt",
+                "v": "25",
+                "vt": "num"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 2,
+        "x": 880,
+        "y": 280,
+        "wires": [
+            [
+                "3787163eb0531e25"
+            ],
+            [
+                "bf7a2eda49c4b51c"
+            ]
+        ]
+    },
+    {
+        "id": "bf7a2eda49c4b51c",
+        "type": "change",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "reset",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1080,
+        "y": 300,
+        "wires": [
+            [
+                "3787163eb0531e25"
+            ]
+        ]
+    },
+    {
+        "id": "3787163eb0531e25",
+        "type": "trigger",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "op1": "",
+        "op2": "",
+        "op1type": "nul",
+        "op2type": "pay",
+        "duration": "5",
+        "extend": true,
+        "overrideDelay": false,
+        "units": "min",
+        "reset": "",
+        "bytopic": "all",
+        "topic": "topic",
+        "outputs": 1,
+        "x": 1270,
+        "y": 260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "46ac54afcd1bb2ef",
+        "type": "subflow:2fd256c6966e229b",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "env": [],
+        "x": 880,
+        "y": 180,
+        "wires": [
+            [
+                "48cb75c19c95a4d8"
+            ]
+        ]
+    },
+    {
+        "id": "ceba56b837aa0bf7",
+        "type": "subflow:e0df0ca748936d99",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "env": [],
+        "x": 1310,
+        "y": 180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a4538abbfa59c622",
+        "type": "subflow:39e4f6d7bc65b2db",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "env": [],
+        "x": 1360,
+        "y": 360,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "48cb75c19c95a4d8",
+        "type": "switch",
+        "z": "f6f2187d.f17ca8",
+        "name": "If Charging",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "charging",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 1090,
+        "y": 180,
+        "wires": [
+            [
+                "ceba56b837aa0bf7"
             ]
         ]
     }

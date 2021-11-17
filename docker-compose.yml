@@ -16,6 +16,8 @@ services:
     ports:
       - 1880:1880
     restart: "always"
+    extra_hosts:
+    - "go-echarger:192.168.86.94"
 
   influxdb:
     image: influxdb:2.1-alpine
