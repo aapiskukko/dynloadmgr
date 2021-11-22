@@ -836,8 +836,8 @@
         "retentionPolicyV18Flux": "",
         "org": "nodered",
         "bucket": "nodered",
-        "x": 1380,
-        "y": 80,
+        "x": 1360,
+        "y": 100,
         "wires": []
     },
     {
@@ -917,7 +917,7 @@
         "rules": [
             {
                 "t": "gt",
-                "v": "25",
+                "v": "27",
                 "vt": "num"
             },
             {
@@ -942,7 +942,7 @@
         "id": "bf7a2eda49c4b51c",
         "type": "change",
         "z": "f6f2187d.f17ca8",
-        "name": "",
+        "name": "Reset",
         "rules": [
             {
                 "t": "set",
@@ -957,11 +957,12 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 1340,
+        "x": 1310,
         "y": 300,
         "wires": [
             [
-                "3787163eb0531e25"
+                "3787163eb0531e25",
+                "5e386422c00eb5f8"
             ]
         ]
     },
@@ -982,10 +983,12 @@
         "bytopic": "all",
         "topic": "topic",
         "outputs": 1,
-        "x": 1530,
+        "x": 1490,
         "y": 260,
         "wires": [
-            []
+            [
+                "19871eb6c862638e"
+            ]
         ]
     },
     {
@@ -1020,8 +1023,8 @@
         "z": "f6f2187d.f17ca8",
         "name": "",
         "env": [],
-        "x": 1760,
-        "y": 320,
+        "x": 1880,
+        "y": 280,
         "wires": [
             []
         ]
@@ -1052,31 +1055,6 @@
         ]
     },
     {
-        "id": "95859b194896ef62",
-        "type": "inject",
-        "z": "f6f2187d.f17ca8",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "false",
-        "payloadType": "bool",
-        "x": 1550,
-        "y": 320,
-        "wires": [
-            [
-                "a4538abbfa59c622"
-            ]
-        ]
-    },
-    {
         "id": "0b54b3511b8954ac",
         "type": "function",
         "z": "f6f2187d.f17ca8",
@@ -1087,11 +1065,64 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1120,
-        "y": 80,
+        "x": 1100,
+        "y": 100,
         "wires": [
             [
                 "b6c67d19522ac87d"
+            ]
+        ]
+    },
+    {
+        "id": "19871eb6c862638e",
+        "type": "change",
+        "z": "f6f2187d.f17ca8",
+        "name": "Set Paused",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "false",
+                "tot": "bool"
+            },
+            {
+                "t": "set",
+                "p": "paused",
+                "pt": "flow",
+                "to": "true",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1670,
+        "y": 260,
+        "wires": [
+            [
+                "a4538abbfa59c622"
+            ]
+        ]
+    },
+    {
+        "id": "5e386422c00eb5f8",
+        "type": "function",
+        "z": "f6f2187d.f17ca8",
+        "name": "Set Unpaused",
+        "func": "if (msg.chargerState === \"charging\") {\n    flow.set(\"isPaused\", false);\n    return null;\n}\nif (flow.get(\"isPaused\")) {\n    msg.payload = true;\n    flow.set(\"isPaused\", false);\n    return msg;\n}\nreturn null;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1500,
+        "y": 320,
+        "wires": [
+            [
+                "a4538abbfa59c622"
             ]
         ]
     }
