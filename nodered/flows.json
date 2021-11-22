@@ -597,7 +597,7 @@
         "type": "function",
         "z": "2fd256c6966e229b",
         "name": "URL",
-        "func": "msg.url = `http://go-echarger/api/status?filter=car`;\nreturn msg;",
+        "func": "msg.url = `http://go-echarger/api/status?filter=car`;\nmsg.origPayload = msg.payload;\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -630,7 +630,7 @@
         "type": "function",
         "z": "2fd256c6966e229b",
         "name": "Status",
-        "func": "var color = 'green';\nvar text = null;\nvar status = null;\n\nif (msg.statusCode !== 200) {\n    color = 'red';\n    text = `HTTP ${msg.statusCode}: ${msg.payload}`\n} else {\n    status = JSON.parse(msg.payload);\n    if (status.car === null) {\n        text = 'Go-eCharger internal error';\n        color = 'red';\n        msg.payload = 'error';\n    } else if (status.car === 0) {\n        text = 'Go-eCharger unknown error';\n        color = 'red';\n        msg.payload = 'error';\n    } else if (status.car === 1) {\n        text = 'Idle';\n        color = 'green';\n        msg.payload = 'idle';\n    } else if (status.car === 2) {\n        text = 'Charging';\n        color = 'green';\n        msg.payload = 'charging';\n    } else if (status.car === 3) {\n        text = 'Wait car';\n        color = 'green';\n        msg.payload = 'waitCar';\n    } else if (status.car === 4) {\n        text = 'Complete';\n        color = 'green';\n    } else if (status.car === 5) {\n        text = 'Error';\n        color = 'red';\n        msg.payload = 'error';\n    } else {\n        text = 'Unknown state';\n        color = 'red';\n        msg.payload = 'error';\n    }\n} \n\nnode.status({\n    fill: color,\n    shape: 'dot',\n    text: text\n});\n\nreturn msg;",
+        "func": "var color = 'green';\nvar text = null;\nvar status = null;\n\nif (msg.statusCode !== 200) {\n    color = 'red';\n    text = `HTTP ${msg.statusCode}: ${msg.payload}`\n} else {\n    status = JSON.parse(msg.payload);\n    if (status.car === null) {\n        text = 'Go-eCharger internal error';\n        color = 'red';\n        msg.payload = 'error';\n    } else if (status.car === 0) {\n        text = 'Go-eCharger unknown error';\n        color = 'red';\n        msg.chargerStatus = 'error';\n    } else if (status.car === 1) {\n        text = 'Idle';\n        color = 'green';\n        msg.chargerStatus = 'idle';\n    } else if (status.car === 2) {\n        text = 'Charging';\n        color = 'green';\n        msg.chargerStatus = 'charging';\n    } else if (status.car === 3) {\n        text = 'Wait car';\n        color = 'green';\n        msg.chargerStatus = 'waitCar';\n    } else if (status.car === 4) {\n        text = 'Complete';\n        color = 'green';\n    } else if (status.car === 5) {\n        text = 'Error';\n        color = 'red';\n        msg.chargerStatus = 'error';\n    } else {\n        text = 'Unknown state';\n        color = 'red';\n        msg.chargerStatus = 'error';\n    }\n} \n\nnode.status({\n    fill: color,\n    shape: 'dot',\n    text: text\n});\n\nmsg.payload = msg.origPayload;\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -813,12 +813,12 @@
         "z": "f6f2187d.f17ca8",
         "name": "",
         "env": [],
-        "x": 660,
+        "x": 920,
         "y": 180,
         "wires": [
             [
-                "b6c67d19522ac87d",
-                "46ac54afcd1bb2ef"
+                "48cb75c19c95a4d8",
+                "0b54b3511b8954ac"
             ]
         ]
     },
@@ -836,8 +836,8 @@
         "retentionPolicyV18Flux": "",
         "org": "nodered",
         "bucket": "nodered",
-        "x": 960,
-        "y": 120,
+        "x": 1380,
+        "y": 80,
         "wires": []
     },
     {
@@ -854,8 +854,8 @@
         "retentionPolicyV18Flux": "",
         "org": "nodered",
         "bucket": "nodered",
-        "x": 580,
-        "y": 120,
+        "x": 560,
+        "y": 100,
         "wires": []
     },
     {
@@ -869,7 +869,7 @@
         "wires": [
             [
                 "ade566d3d250a94e",
-                "5c848530d6f462bb"
+                "46ac54afcd1bb2ef"
             ]
         ]
     },
@@ -884,7 +884,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 470,
+        "x": 730,
         "y": 180,
         "wires": [
             [
@@ -899,7 +899,7 @@
         "z": "f6f2187d.f17ca8",
         "name": "",
         "env": [],
-        "x": 660,
+        "x": 920,
         "y": 280,
         "wires": [
             [
@@ -927,7 +927,7 @@
         "checkall": "false",
         "repair": false,
         "outputs": 2,
-        "x": 880,
+        "x": 1140,
         "y": 280,
         "wires": [
             [
@@ -957,7 +957,7 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 1080,
+        "x": 1340,
         "y": 300,
         "wires": [
             [
@@ -982,7 +982,7 @@
         "bytopic": "all",
         "topic": "topic",
         "outputs": 1,
-        "x": 1270,
+        "x": 1530,
         "y": 260,
         "wires": [
             []
@@ -994,11 +994,11 @@
         "z": "f6f2187d.f17ca8",
         "name": "",
         "env": [],
-        "x": 880,
+        "x": 510,
         "y": 180,
         "wires": [
             [
-                "48cb75c19c95a4d8"
+                "5c848530d6f462bb"
             ]
         ]
     },
@@ -1008,7 +1008,7 @@
         "z": "f6f2187d.f17ca8",
         "name": "",
         "env": [],
-        "x": 1310,
+        "x": 1330,
         "y": 180,
         "wires": [
             []
@@ -1020,7 +1020,7 @@
         "z": "f6f2187d.f17ca8",
         "name": "",
         "env": [],
-        "x": 1500,
+        "x": 1760,
         "y": 320,
         "wires": [
             []
@@ -1031,7 +1031,7 @@
         "type": "switch",
         "z": "f6f2187d.f17ca8",
         "name": "If Charging",
-        "property": "payload",
+        "property": "chargerStatus",
         "propertyType": "msg",
         "rules": [
             {
@@ -1043,7 +1043,7 @@
         "checkall": "true",
         "repair": false,
         "outputs": 1,
-        "x": 1090,
+        "x": 1110,
         "y": 180,
         "wires": [
             [
@@ -1068,11 +1068,30 @@
         "topic": "",
         "payload": "false",
         "payloadType": "bool",
-        "x": 1290,
+        "x": 1550,
         "y": 320,
         "wires": [
             [
                 "a4538abbfa59c622"
+            ]
+        ]
+    },
+    {
+        "id": "0b54b3511b8954ac",
+        "type": "function",
+        "z": "f6f2187d.f17ca8",
+        "name": "Prepare",
+        "func": "var current = 0;\nif (msg.chargerStatus === \"charging\") {\n    current = msg.payload;\n}\nmsg.payload = {\n    current: current,\n    status : msg.chargerStatus\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1120,
+        "y": 80,
+        "wires": [
+            [
+                "b6c67d19522ac87d"
             ]
         ]
     }
