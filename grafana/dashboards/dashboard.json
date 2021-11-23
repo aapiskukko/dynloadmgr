@@ -114,7 +114,7 @@
           "refId": "B"
         }
       ],
-      "title": "Charge Current",
+      "title": "Charging Current",
       "transformations": [],
       "type": "timeseries"
     },
