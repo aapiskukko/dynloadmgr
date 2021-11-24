@@ -154,7 +154,7 @@
         ],
         "out": [
             {
-                "x": 620,
+                "x": 600,
                 "y": 60,
                 "wires": [
                     {
@@ -630,7 +630,7 @@
         "type": "function",
         "z": "2fd256c6966e229b",
         "name": "Status",
-        "func": "var color = 'green';\nvar text = null;\nvar status = null;\n\nif (msg.statusCode !== 200) {\n    color = 'red';\n    text = `HTTP ${msg.statusCode}: ${msg.payload}`\n} else {\n    status = JSON.parse(msg.payload);\n    if (status.car === null) {\n        text = 'Go-eCharger internal error';\n        color = 'red';\n        msg.payload = 'error';\n    } else if (status.car === 0) {\n        text = 'Go-eCharger unknown error';\n        color = 'red';\n        msg.chargerStatus = 'error';\n    } else if (status.car === 1) {\n        text = 'Idle';\n        color = 'green';\n        msg.chargerStatus = 'idle';\n    } else if (status.car === 2) {\n        text = 'Charging';\n        color = 'green';\n        msg.chargerStatus = 'charging';\n    } else if (status.car === 3) {\n        text = 'Wait car';\n        color = 'green';\n        msg.chargerStatus = 'waitCar';\n    } else if (status.car === 4) {\n        text = 'Complete';\n        color = 'green';\n    } else if (status.car === 5) {\n        text = 'Error';\n        color = 'red';\n        msg.chargerStatus = 'error';\n    } else {\n        text = 'Unknown state';\n        color = 'red';\n        msg.chargerStatus = 'error';\n    }\n} \n\nnode.status({\n    fill: color,\n    shape: 'dot',\n    text: text\n});\n\nmsg.payload = msg.origPayload;\nreturn msg;",
+        "func": "var color = 'green';\nvar text = null;\nvar status = null;\n\nif (msg.statusCode !== 200) {\n    color = 'red';\n    text = `HTTP ${msg.statusCode}: ${msg.payload}`\n} else {\n    status = JSON.parse(msg.payload);\n    if (status.car === null) {\n        text = 'Go-eCharger internal error';\n        color = 'red';\n        msg.chargerStatus = 'Error';\n    } else if (status.car === 0) {\n        text = 'Go-eCharger unknown error';\n        color = 'red';\n        msg.chargerStatus = 'Error';\n    } else if (status.car === 1) {\n        text = 'Idle';\n        color = 'green';\n        msg.chargerStatus = 'Idle';\n    } else if (status.car === 2) {\n        text = 'Charging';\n        color = 'green';\n        msg.chargerStatus = 'Charging';\n    } else if (status.car === 3) {\n        text = 'Wait Car';\n        color = 'green';\n        msg.chargerStatus = 'Wait Car';\n    } else if (status.car === 4) {\n        text = 'Complete';\n        color = 'green';\n        msg.chargerStatus = 'Complete';\n    } else if (status.car === 5) {\n        text = 'Error';\n        color = 'red';\n        msg.chargerStatus = 'Error';\n    } else {\n        text = 'Unknown State';\n        color = 'red';\n        msg.chargerStatus = 'Unknown';\n    }\n} \n\nnode.status({\n    fill: color,\n    shape: 'dot',\n    text: text\n});\n\nmsg.payload = msg.origPayload;\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -741,7 +741,7 @@
         "type": "function",
         "z": "39e4f6d7bc65b2db",
         "name": "URL",
-        "func": "var val = 0;\n// Continue Charging\nif (msg.payload) {\n    val = 0;\n// Stop Charging\n} else {\n    val = 1;\n}\nmsg.url = `http://go-echarger/api/set?frc=${val}`;\nreturn msg;",
+        "func": "var val = 0;\n// Continue Charging\nif (msg.payload) {\n    val = 0;\n// Stop Charging\n} else {\n    val = 1;\n}\nmsg.url = `http://go-echarger/api/set?frc=${val}`;\nmsg.payload_in = msg.payload;\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -760,7 +760,7 @@
         "type": "function",
         "z": "39e4f6d7bc65b2db",
         "name": "Status",
-        "func": "var color = 'green';\nvar text = null;\n\nif (msg.statusCode !== 200) {\n    color = 'red';\n    text = `HTTP ${msg.statusCode}: ${msg.payload}`\n} else {\n    var status = JSON.parse(msg.payload);\n    if (status.frc) {\n        color = 'green';\n        text = `Set ${msg.curr} A`\n    } else {\n        color = 'red';\n        text = `${status}`\n    }\n} \n\nnode.status({\n    fill: color,\n    shape: 'dot',\n    text: text\n});\n\nreturn msg;",
+        "func": "var color = 'green';\nvar text = null;\n\nif (msg.statusCode !== 200) {\n    color = 'red';\n    text = `HTTP ${msg.statusCode}: ${msg.payload}`\n} else {\n    var status = JSON.parse(msg.payload);\n    if (status.frc) {\n        color = 'green';\n        text = `Set charging to ${msg.payload_in}`\n    } else {\n        color = 'red';\n        text = `${status}`\n    }\n} \n\nnode.status({\n    fill: color,\n    shape: 'dot',\n    text: text\n});\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -899,95 +899,11 @@
         "z": "f6f2187d.f17ca8",
         "name": "",
         "env": [],
-        "x": 920,
-        "y": 280,
-        "wires": [
-            [
-                "a2e712151ac5b616"
-            ]
-        ]
-    },
-    {
-        "id": "a2e712151ac5b616",
-        "type": "switch",
-        "z": "f6f2187d.f17ca8",
-        "name": "Braker Overload",
-        "property": "payload",
-        "propertyType": "msg",
-        "rules": [
-            {
-                "t": "gt",
-                "v": "27",
-                "vt": "num"
-            },
-            {
-                "t": "else"
-            }
-        ],
-        "checkall": "false",
-        "repair": false,
-        "outputs": 2,
-        "x": 1140,
-        "y": 280,
-        "wires": [
-            [
-                "3787163eb0531e25"
-            ],
-            [
-                "bf7a2eda49c4b51c"
-            ]
-        ]
-    },
-    {
-        "id": "bf7a2eda49c4b51c",
-        "type": "change",
-        "z": "f6f2187d.f17ca8",
-        "name": "Reset",
-        "rules": [
-            {
-                "t": "set",
-                "p": "reset",
-                "pt": "msg",
-                "to": "true",
-                "tot": "bool"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 1310,
+        "x": 910,
         "y": 300,
         "wires": [
             [
-                "3787163eb0531e25",
-                "5e386422c00eb5f8"
-            ]
-        ]
-    },
-    {
-        "id": "3787163eb0531e25",
-        "type": "trigger",
-        "z": "f6f2187d.f17ca8",
-        "name": "",
-        "op1": "",
-        "op2": "",
-        "op1type": "nul",
-        "op2type": "pay",
-        "duration": "5",
-        "extend": true,
-        "overrideDelay": false,
-        "units": "min",
-        "reset": "",
-        "bytopic": "all",
-        "topic": "topic",
-        "outputs": 1,
-        "x": 1490,
-        "y": 260,
-        "wires": [
-            [
-                "19871eb6c862638e"
+                "2bf23d45ab2031e8"
             ]
         ]
     },
@@ -1023,8 +939,8 @@
         "z": "f6f2187d.f17ca8",
         "name": "",
         "env": [],
-        "x": 1880,
-        "y": 280,
+        "x": 1520,
+        "y": 300,
         "wires": [
             []
         ]
@@ -1039,7 +955,7 @@
         "rules": [
             {
                 "t": "eq",
-                "v": "charging",
+                "v": "Charging",
                 "vt": "str"
             }
         ],
@@ -1059,7 +975,7 @@
         "type": "function",
         "z": "f6f2187d.f17ca8",
         "name": "Prepare",
-        "func": "var current = 0;\nif (msg.chargerStatus === \"charging\") {\n    current = msg.payload;\n}\nmsg.payload = {\n    current: current,\n    status : msg.chargerStatus\n}\nreturn msg;",
+        "func": "var current = 0;\nif (msg.chargerStatus === \"Charging\") {\n    current = msg.payload;\n}\nmsg.payload = {\n    current: current,\n    status : msg.chargerStatus\n}\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1077,7 +993,7 @@
         "id": "19871eb6c862638e",
         "type": "change",
         "z": "f6f2187d.f17ca8",
-        "name": "Set Paused",
+        "name": "Stop",
         "rules": [
             {
                 "t": "set",
@@ -1085,11 +1001,53 @@
                 "pt": "msg",
                 "to": "false",
                 "tot": "bool"
-            },
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1290,
+        "y": 260,
+        "wires": [
+            [
+                "a4538abbfa59c622"
+            ]
+        ]
+    },
+    {
+        "id": "2bf23d45ab2031e8",
+        "type": "function",
+        "z": "f6f2187d.f17ca8",
+        "name": "If Overload",
+        "func": "var brakerSize = 25;\nvar maxOvers = 6; // 60 s\nvar minChargeCur = 6;\n\nif (msg.chargerStatus === \"Charging\") {\n    if (msg.payload > brakerSize) {\n        let overs = context.get(\"overloads\") + 1;\n        node.status({\n            fill: 'red',\n            shape: 'dot',\n            text: `Overloading ${5 * overs} s`\n        });\n        if (overs >= maxOvers) {\n            context.set(\"overloads\", 0);\n            return [msg, null];\n        } else {\n            context.set(\"overloads\", overs);\n            return null;\n        }\n    } else {\n        context.set(\"overloads\", 0);\n        node.status({\n            fill: 'green',\n            shape: 'dot',\n            text: `OK`\n        });\n        return null;\n    }\n} else {\n    var avail = Math.max(brakerSize - msg.payload, 0);\n    if (avail > minChargeCur) { \n        context.set(\"overloads\", 0);\n        node.status({\n            fill: 'green',\n            shape: 'dot',\n            text: `OK`\n        });\n        return [null, msg];\n    } else {\n        node.status({\n            fill: 'yellow',\n            shape: 'dot',\n            text: `Load too high`\n        });\n        context.set(\"overloads\", 0);\n        return null;\n    }\n}\n\nreturn null;",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "// Code added here will be run once\n// whenever the node is started.\ncontext.set(\"overloads\", 0);",
+        "finalize": "",
+        "libs": [],
+        "x": 1110,
+        "y": 300,
+        "wires": [
+            [
+                "19871eb6c862638e"
+            ],
+            [
+                "d648541135e0d394"
+            ]
+        ]
+    },
+    {
+        "id": "d648541135e0d394",
+        "type": "change",
+        "z": "f6f2187d.f17ca8",
+        "name": "Start",
+        "rules": [
             {
                 "t": "set",
-                "p": "paused",
-                "pt": "flow",
+                "p": "payload",
+                "pt": "msg",
                 "to": "true",
                 "tot": "bool"
             }
@@ -1099,27 +1057,8 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 1670,
-        "y": 260,
-        "wires": [
-            [
-                "a4538abbfa59c622"
-            ]
-        ]
-    },
-    {
-        "id": "5e386422c00eb5f8",
-        "type": "function",
-        "z": "f6f2187d.f17ca8",
-        "name": "Set Unpaused",
-        "func": "if (msg.chargerState === \"charging\") {\n    flow.set(\"isPaused\", false);\n    return null;\n}\nif (flow.get(\"isPaused\")) {\n    msg.payload = true;\n    flow.set(\"isPaused\", false);\n    return msg;\n}\nreturn null;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 1500,
-        "y": 320,
+        "x": 1290,
+        "y": 340,
         "wires": [
             [
                 "a4538abbfa59c622"
