@@ -760,7 +760,7 @@
         "type": "function",
         "z": "39e4f6d7bc65b2db",
         "name": "Status",
-        "func": "var color = 'green';\nvar text = null;\n\nif (msg.statusCode !== 200) {\n    color = 'red';\n    text = `HTTP ${msg.statusCode}: ${msg.payload}`\n} else {\n    var status = JSON.parse(msg.payload);\n    if (status.frc) {\n        color = 'green';\n        text = `Set charging to ${msg.payload_in}`\n    } else {\n        color = 'red';\n        text = `${status}`\n    }\n} \n\nnode.status({\n    fill: color,\n    shape: 'dot',\n    text: text\n});\n\nreturn msg;",
+        "func": "var color = 'green';\nvar text = null;\nvar today = new Date();\nvar time = `${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`;\n\nif (msg.statusCode !== 200) {\n    color = 'red';\n    text = `HTTP ${msg.statusCode}: ${msg.payload}`\n} else {\n    var status = JSON.parse(msg.payload);\n    if (status.frc) {\n        color = 'green';\n        text = `Set charging to ${msg.payload_in}`\n    } else {\n        color = 'red';\n        text = `${status}`\n    }\n} \n\nnode.status({\n    fill: color,\n    shape: 'dot',\n    text: `${time}UTC ${text}`\n});\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",

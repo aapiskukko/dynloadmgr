@@ -160,7 +160,9 @@
           "values": false
         },
         "showUnfilled": false,
-        "text": {}
+        "text": {
+          "valueSize": 30
+        }
       },
       "pluginVersion": "8.2.3",
       "targets": [
@@ -180,6 +182,7 @@
             "mode": "thresholds"
           },
           "mappings": [],
+          "max": 30,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -336,6 +339,7 @@
             "mode": "thresholds"
           },
           "mappings": [],
+          "max": 30,
           "thresholds": {
             "mode": "absolute",
             "steps": [
