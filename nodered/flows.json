@@ -847,7 +847,7 @@
         "type": "function",
         "z": "39e4f6d7bc65b2db",
         "name": "Status",
-        "func": "var color = 'green';\nvar text = null;\nvar today = new Date();\nvar time = `${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`;\n\nif (msg.statusCode !== 200) {\n    color = 'red';\n    text = `HTTP ${msg.statusCode}: ${msg.payload}`\n} else {\n    var status = JSON.parse(msg.payload);\n    if (status.frc) {\n        color = 'green';\n        text = `Set charging to ${msg.payload_in}`\n    } else {\n        color = 'red';\n        text = `${status}`\n    }\n} \n\nnode.status({\n    fill: color,\n    shape: 'dot',\n    text: `${time}UTC ${text}`\n});\n\nreturn msg;",
+        "func": "var color = 'green';\nvar text = null;\nvar today = new Date();\nvar hours = (\"0\" + today.getHours()).slice(-2);\nvar mins = (\"0\" + today.getMinutes()).slice(-2);\nvar secs = (\"0\" + today.getSeconds()).slice(-2);\nvar time = `${hours}:${mins}:${secs}UTC`;\n\nif (msg.statusCode !== 200) {\n    color = 'red';\n    text = `HTTP ${msg.statusCode}: ${msg.payload}`\n} else {\n    var status = JSON.parse(msg.payload);\n    if (status.frc) {\n        color = 'green';\n        text = `Set charging to ${msg.payload_in}`\n    } else {\n        color = 'red';\n        text = `${status}`\n    }\n} \n\nnode.status({\n    fill: color,\n    shape: 'dot',\n    text: `${time} ${text}`\n});\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -878,7 +878,7 @@
         "type": "function",
         "z": "468aa6b1e72fc9d2",
         "name": "",
-        "func": "function random(min, max) {\n  return Math.random() * (max - min + 1) + min;\n}\n\nif (env.get(\"bypass\")) {\n    node.status({\n        fill: 'green',\n        shape: 'dot',\n        text:`bypass`\n    });\n    return msg;\n}\n\nvar min = env.get(\"minCurrent\") || 0;\nvar max = env.get(\"maxCurrent\") || 0;\nvar orig = msg.payload;\nvar val = Number(msg.payload);\nvar load = random(min, max);\nmsg.payload = (val + load).toFixed(2);\n\nnode.status({\n    fill: 'green',\n    shape: 'dot',\n    text:`${orig} + ${load.toFixed(2)} = ${msg.payload} A`\n});\n\nreturn msg;",
+        "func": "function random(min, max) {\n  return Math.random() * (max - min) + min;\n}\n\nif (env.get(\"bypass\")) {\n    node.status({\n        fill: 'green',\n        shape: 'dot',\n        text:`bypass`\n    });\n    return msg;\n}\n\nvar min = env.get(\"minCurrent\") || 0;\nvar max = env.get(\"maxCurrent\") || 0;\nif (min > max) {\n    min = max;\n}\nvar orig = msg.payload;\nvar val = Number(msg.payload);\nvar load = random(min, max);\nmsg.payload = (val + load).toFixed(2);\n\nnode.status({\n    fill: 'green',\n    shape: 'dot',\n    text:`${orig} + ${load.toFixed(2)} = ${msg.payload} A`\n});\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1137,7 +1137,7 @@
         "type": "function",
         "z": "f6f2187d.f17ca8",
         "name": "If Overload",
-        "func": "var brakerSize = 25;\nvar maxOvers = 6; // 60 s\nvar minChargeCur = 6;\nvar paused = context.get(\"paused\");\n\nif (msg.chargerStatus === \"Charging\") {\n    if (msg.payload > brakerSize) {\n        let overs = context.get(\"overloads\") + 1;\n        node.status({\n            fill: 'red',\n            shape: 'dot',\n            text: `Overloading ${5 * overs} s`\n        });\n        if (overs >= maxOvers) {\n            context.set(\"overloads\", 0);\n            context.set(\"paused\", true);\n            return [msg, null];\n        } else {\n            context.set(\"overloads\", overs);\n            return null;\n        }\n    } else {\n        context.set(\"overloads\", 0);\n        context.set(\"paused\", false);\n        node.status({\n            fill: 'green',\n            shape: 'dot',\n            text: `OK`\n        });\n        return null;\n    }\n} else if (paused) {\n    var avail = Math.max(brakerSize - msg.payload, 0);\n    if (avail > minChargeCur) { \n        context.set(\"overloads\", 0);\n        context.set(\"paused\", false);\n        node.status({\n            fill: 'green',\n            shape: 'dot',\n            text: `OK`\n        });\n        return [null, msg];\n    } else {\n        node.status({\n            fill: 'yellow',\n            shape: 'dot',\n            text: `Load too high`\n        });\n        context.set(\"overloads\", 0);\n        return null;\n    }\n}\n\nreturn null;",
+        "func": "var brakerSize = 25;\nvar maxOvers = 6; // 60 s\nvar minChargeCur = 6;\nvar paused = context.get(\"paused\");\n\nif (msg.chargerStatus === \"Charging\" && !paused) {\n    if (msg.payload > brakerSize) {\n        let overs = context.get(\"overloads\") + 1;\n        node.status({\n            fill: 'red',\n            shape: 'dot',\n            text: `Overloading ${5 * overs} s`\n        });\n        if (overs >= maxOvers) {\n            context.set(\"overloads\", 0);\n            context.set(\"paused\", true);\n            return [msg, null];\n        } else {\n            context.set(\"overloads\", overs);\n            return null;\n        }\n    } else {\n        context.set(\"overloads\", 0);\n        context.set(\"paused\", false);\n        node.status({\n            fill: 'green',\n            shape: 'dot',\n            text: `OK`\n        });\n        return null;\n    }\n} else if (paused) {\n    var avail = Math.max(brakerSize - msg.payload, 0);\n    if (avail > minChargeCur) { \n        context.set(\"overloads\", 0);\n        context.set(\"paused\", false);\n        node.status({\n            fill: 'green',\n            shape: 'dot',\n            text: `OK`\n        });\n        return [null, msg];\n    } else {\n        node.status({\n            fill: 'yellow',\n            shape: 'dot',\n            text: `Load too high`\n        });\n        context.set(\"overloads\", 0);\n        return null;\n    }\n}\n\nnode.status({\n    fill: 'green',\n    shape: 'dot',\n    text: `Ignoring`\n});\nreturn null;",
         "outputs": 2,
         "noerr": 0,
         "initialize": "// Code added here will be run once\n// whenever the node is started.\ncontext.set(\"overloads\", 0);\ncontext.set(\"paused\", false);",
@@ -1189,18 +1189,13 @@
         "env": [
             {
                 "name": "minCurrent",
-                "value": "6",
+                "value": "8",
                 "type": "num"
             },
             {
                 "name": "maxCurrent",
-                "value": "9",
+                "value": "10",
                 "type": "num"
-            },
-            {
-                "name": "bypass",
-                "type": "bool",
-                "value": "false"
             }
         ],
         "x": 260,
