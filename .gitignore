@@ -3,3 +3,4 @@ grafana/data
 nodered/.config*
 nodered/.flows*
 *.backup
+.env

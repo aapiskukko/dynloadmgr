@@ -2,9 +2,10 @@
     {
         "id": "f6f2187d.f17ca8",
         "type": "tab",
-        "label": "Flow 1",
+        "label": "Logic",
         "disabled": false,
-        "info": ""
+        "info": "",
+        "env": []
     },
     {
         "id": "efb1c3cb4ec1b96e",
@@ -684,7 +685,7 @@
         "type": "function",
         "z": "2fd256c6966e229b",
         "name": "URL",
-        "func": "msg.url = `http://go-echarger/api/status?filter=car`;\nmsg.origPayload = msg.payload;\nreturn msg;",
+        "func": "const host = env.get(\"GO_E_CHARGER_HOST\");\nmsg.url = `http://${host}/api/status?filter=car`;\nmsg.origPayload = msg.payload;\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -756,7 +757,7 @@
         "type": "function",
         "z": "e0df0ca748936d99",
         "name": "URL",
-        "func": "msg.url = `http://go-echarger/api/set?amp=${msg.curr}`;\nreturn msg;",
+        "func": "const host = env.get(\"GO_E_CHARGER_HOST\");\nmsg.url = `http://${host}/api/set?amp=${msg.curr}`;\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -828,7 +829,7 @@
         "type": "function",
         "z": "39e4f6d7bc65b2db",
         "name": "URL",
-        "func": "var val = 0;\n// Continue Charging\nif (msg.payload) {\n    val = 0;\n// Stop Charging\n} else {\n    val = 1;\n}\nmsg.url = `http://go-echarger/api/set?frc=${val}`;\nmsg.payload_in = msg.payload;\nreturn msg;",
+        "func": "var val = 0;\n// Continue Charging\nif (msg.payload) {\n    val = 0;\n// Stop Charging\n} else {\n    val = 1;\n}\nconst host = env.get(\"GO_E_CHARGER_HOST\");\nmsg.url = `http://${host}/api/set?frc=${val}`;\nmsg.payload_in = msg.payload;\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",

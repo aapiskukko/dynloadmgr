@@ -6,25 +6,13 @@ services:
     volumes:
       - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
     ports:
-      - 1883:1883
+      - ${MOSQUITTO_PORT}:1883
     restart: "always"
-
-  nodered:
-    image: dynnodered:latest
-    volumes:
-      - ./nodered:/data
-    ports:
-      - 1880:1880
-    restart: "always"
-    extra_hosts:
-    - "go-echarger:192.168.86.94"
 
   influxdb:
     image: influxdb:2.1-alpine
     volumes:
       - ./influxdb/data:/var/lib/influxdb2
-    ports:
-      - 8086:8086
     environment:
       - DOCKER_INFLUXDB_INIT_MODE=setup
       - DOCKER_INFLUXDB_INIT_USERNAME=nodered
@@ -35,14 +23,30 @@ services:
       - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=kasvit-kasvaa-vain
     restart: "always"
 
+  nodered:
+    image: dynnodered:latest
+    volumes:
+      - ./nodered:/data
+    ports:
+      - ${NODE_RED_PORT}:1880
+    restart: "always"
+    depends_on:
+      - mosquitto
+      - influxdb
+    environment:
+      - GO_E_CHARGER_HOST=${GO_E_CHARGER_HOST}
+
   grafana:
     image: grafana/grafana:8.2.3
     ports:
-      - 3000:3000
+      - ${GRAFANA_PORT}:3000
     volumes:
       - ./grafana/data:/var/lib/grafana
       - ./grafana/grafana.ini:/etc/grafana/grafana.ini
       - ./grafana/provisioning:/etc/grafana/provisioning
       - ./grafana/dashboards:/var/lib/dashboards
-    user: "${UID}:${GID}"
+    user: "0"
     restart: "always"
+    depends_on:
+      - nodered
+      - influxdb
