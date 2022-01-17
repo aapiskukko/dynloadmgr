@@ -236,6 +236,11 @@
           "hide": false,
           "query": "from(bucket: v.defaultBucket) \n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)  \n  |> filter(fn: (r) => r._measurement == \"chargeCurrent\" and r._field == \"status\")\n  |> map(fn: (r) => ({_value:r._value, _time:r._time, _field: \"Charging Status\"}))",
           "refId": "C"
+        },
+        {
+          "hide": false,
+          "query": "from(bucket: v.defaultBucket) \n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)  \n  |> filter(fn: (r) => r._measurement == \"chargeCurrent\" and r._field == \"maxCurrent\")\n  |> map(fn: (r) => ({_value:r._value, _time:r._time, _field: \"Current Limit\"}))",
+          "refId": "D"
         }
       ],
       "title": "Charging Current",
