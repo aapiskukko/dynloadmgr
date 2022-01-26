@@ -12,6 +12,7 @@ Features:
 * Temporarily stop charging the car if main fuse load is over 25 A for 5 minutes in a row
 * If charging is stopped manually from go-eCharger app, do not automatically continue charging
 * Monitor key parameters in real-time in Grafana instance
+* Possibility to limit maximum charging current (6-16 A)
 
 ### Built With
 
