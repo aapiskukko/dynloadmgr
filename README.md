@@ -53,7 +53,12 @@ Make tool is used to build necessary Docker images locally and clean all the per
 Open source distributed version control system.
 
 #### [Shelly 3EM API](https://shelly-api-docs.shelly.cloud/gen1/#shelly-family-overview)
-Shelly 3EM needs to be installed by electrician to your house. After that it needs to be configured to send MQTT data to the host where this application is running inside your local network. 
+Shelly 3EM needs to be installed by electrician to your house. After that it needs to be configured to send MQTT data to the host where this application is running inside your local network.
+
+#### [go-eCharger HOME+ API](https://github.com/goecharger/go-eCharger-API-v2)
+
+go-eCharger HOME+ API must be enabled in mobile app.
+
 
 ### Installation
 
