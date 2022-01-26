@@ -99,7 +99,7 @@ http://[host]:3000
 ```
 Host is the computer host name or IP address where this software stack is running.
 
-### Configation
+### Configuration
 
 #### Change Maximum Charging Current 
 1. Using a device that is connected to your WiFi go to the following address using a web browser:
