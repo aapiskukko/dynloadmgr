@@ -16,6 +16,8 @@ Features:
 
 ### Built With
 
+Built with the popular open source tools each running as a Docker instance.
+
 ![Alt text](doc/arch.png "Architecture")
 
 #### [Shelly 3EM](https://shelly.cloud)
