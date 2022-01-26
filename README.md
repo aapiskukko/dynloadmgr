@@ -60,9 +60,37 @@ Docker Compose is used to manage Docker containers
 
 Make tool is used to build necessary Docker images locally and clean all the persistent data.
 
+#### [Git](https://git-scm.com)
+
+Open source distributed version control system.
+
 ## Installation
 
 1. Clone the repo
     ```sh
-    fef
+    git clone https://github.com/aapiskukko/dynloadmgr.git
     ```
+2. Build some Docker images locally using Make
+    ```sh
+    make
+    ```
+3. Create copy of env file template
+    ```sh
+    cp example.env .env
+    ```
+4. Set go-eCharger HOME+ host name or IP address to .env file
+    ```sh
+    GO_E_CHARGER_HOST=192.168.86.94
+    ```
+
+# Usage
+
+* Start up the software stack
+    ```sh
+    docker-compose up -d
+    ```
+* Close the software stack
+    ```sh
+    docker-compose down
+    ```
+    
