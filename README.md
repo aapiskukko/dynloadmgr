@@ -6,5 +6,9 @@ Features:
 
 * All communication between the devices is wireless using existing WiFi network  
 * Adjust go-eCharger HOME+ charging amps (6-16 A) with 5 s interval
-* Use maximum value of each phase to determine the instantaneous load
+* Use maximum value of phases to determine the instantaneous load
 * Temporarily stop charging the car if main fuse load is over 25 A for 5 minutes in a row
+* If charging is stopped manually from go-eCharger app, do not automatically continue charging
+* Monitor key variables in real-time in Grafana instance 
+
+
