@@ -25,7 +25,7 @@ Built with the popular open source tools each running in own Docker container.
 Popular open source MQTT message broker.
 
 #### [Node-RED](https://nodered.org)
-Programming tool for wiring together hardware devices, APIs and online services in new and interesting ways.
+Programming tool for wiring together hardware devices, APIs and online services.
 
 #### [go-eCharger HOME+](https://go-e.co)
 Stationary and mobile charging station for electric vehicles. Can be controlled via HTTP and MQTT protocols.
