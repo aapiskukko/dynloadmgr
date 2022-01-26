@@ -44,9 +44,9 @@ Time-series database.
 
 Popular open source data visualization tool.
 
-# Getting Started
+## Getting Started
 
-## Prerequisites
+### Prerequisites
 
 #### [Docker](https://docker.com)
 
@@ -64,26 +64,36 @@ Make tool is used to build necessary Docker images locally and clean all the per
 
 Open source distributed version control system.
 
-## Installation
+#### [Shelly 3EM API](https://shelly-api-docs.shelly.cloud/gen1/#shelly-family-overview)
+
+Shelly 3EM needs to be installed by electrician to your house. After that it needs to be configured to send MQTT data to the host where this application is running inside your local network. 
+
+### Installation
 
 1. Clone the repo
     ```sh
     git clone https://github.com/aapiskukko/dynloadmgr.git
     ```
-2. Build some Docker images locally using Make
+2. Go to the project folder
+    ```sh
+    cd dynloadmgr
+    ```
+3. Build some Docker images locally using Make
     ```sh
     make
     ```
-3. Create copy of env file template
+4. Create copy of env file template
     ```sh
     cp example.env .env
     ```
-4. Set go-eCharger HOME+ host name or IP address to .env file
+5. Set go-eCharger HOME+ host name or IP address to .env file
     ```sh
     GO_E_CHARGER_HOST=192.168.86.94
     ```
 
-# Usage
+## Usage
+
+Go to the project folder before typing the commands below.
 
 * Start up the software stack
     ```sh
