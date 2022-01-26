@@ -16,7 +16,7 @@ Features:
 
 ### Built With
 
-Built with the popular open source tools each running as a Docker instance.
+Built with the popular open source tools each running in own Docker container.
 
 ![Alt text](doc/arch.png "Architecture")
 
@@ -43,3 +43,26 @@ Time-series database.
 #### [Grafana](https://grafana.com)
 
 Popular open source data visualization tool.
+
+# Getting Started
+
+## Prerequisites
+
+#### [Docker](https://docker.com)
+
+Docker platfrom is required to be installed and configured to get things up and running.
+
+#### [Docker Compose](https://docs.docker.com/compose/)
+
+Docker Compose is used to manage Docker containers
+
+#### [GNU Make](https://www.gnu.org/software/make/)
+
+Make tool is used to build necessary Docker images locally and clean all the persistent data.
+
+## Installation
+
+1. Clone the repo
+    ```sh
+    fef
+    ```
