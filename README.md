@@ -57,7 +57,7 @@ Shelly 3EM needs to be installed by electrician to your house. After that it nee
 
 #### [go-eCharger HOME+ API](https://github.com/goecharger/go-eCharger-API-v2)
 
-go-eCharger HOME+ API must be enabled in mobile app.
+go-eCharger HOME+ API v2 must be activated in mobile app settings.
 
 
 ### Installation
