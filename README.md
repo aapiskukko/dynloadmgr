@@ -109,3 +109,7 @@ Host is the computer host name or IP address where this software stack is runnin
 2. In Node-RED UI, double click node `Charge Current`
 3. Select desired current level in drop-down menu and press `Done`
 4. Click `Deploy` in top right corner of Node-RED UI
+
+## Testing
+
+Tested in Ubuntu 20.03.4 LTS.
