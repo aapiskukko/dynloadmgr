@@ -17,11 +17,26 @@ Features:
 
 ![Alt text](doc/arch.png "Architecture")
 
-#### [Shelly 3EM](https://shelly.cloud/)
+#### [Shelly 3EM](https://shelly.cloud)
 
-3-phase energy meter [Shelly](https://shelly.cloud/)
+3-phase energy meter with capability to publish data to external MQTT server.
 
-####
+#### [Mosquitto](https://mosquitto.org)
 
+Popular open source MQTT message broker.
 
+#### [Node-RED](https://nodered.org)
 
+Programming tool for wiring together hardware devices, APIs and online services in new and interesting ways.
+
+#### [go-eCharger HOME+](https://go-e.co)
+
+Stationary and mobile charging station for electric vehicles. Can be controlled via HTTP and MQTT protocols.
+
+#### [InfluxDB](https://www.influxdata.com)
+
+Time-series database.
+
+#### [Grafana](https://grafana.com)
+
+Popular open source data visualization tool.
