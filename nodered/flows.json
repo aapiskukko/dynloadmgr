@@ -979,7 +979,7 @@
         "env": [
             {
                 "name": "maxChargeAmps",
-                "value": "8",
+                "value": "10",
                 "type": "str"
             }
         ],
