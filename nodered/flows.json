@@ -8,6 +8,14 @@
         "env": []
     },
     {
+        "id": "7361e20fe34a37d4",
+        "type": "tab",
+        "label": "Dashboard",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
         "id": "efb1c3cb4ec1b96e",
         "type": "subflow",
         "name": "Charge Current",
@@ -26,7 +34,7 @@
         ],
         "out": [
             {
-                "x": 820,
+                "x": 800,
                 "y": 100,
                 "wires": [
                     {
@@ -36,54 +44,7 @@
                 ]
             }
         ],
-        "env": [
-            {
-                "name": "maxChargeAmps",
-                "type": "str",
-                "value": "16",
-                "ui": {
-                    "icon": "font-awesome/fa-plug",
-                    "label": {
-                        "en-US": "Max Current"
-                    },
-                    "type": "select",
-                    "opts": {
-                        "opts": [
-                            {
-                                "l": {
-                                    "en-US": "16 A"
-                                },
-                                "v": "16"
-                            },
-                            {
-                                "l": {
-                                    "en-US": "14 A"
-                                },
-                                "v": "14"
-                            },
-                            {
-                                "l": {
-                                    "en-US": "12 A"
-                                },
-                                "v": "12"
-                            },
-                            {
-                                "l": {
-                                    "en-US": "10 A"
-                                },
-                                "v": "10"
-                            },
-                            {
-                                "l": {
-                                    "en-US": "8 A"
-                                },
-                                "v": "8"
-                            }
-                        ]
-                    }
-                }
-            }
-        ],
+        "env": [],
         "meta": {},
         "color": "#DDAA99",
         "status": {
@@ -400,6 +361,28 @@
         }
     },
     {
+        "id": "ed9c44006b3afbd1",
+        "type": "subflow",
+        "name": "MQTT Publish",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 80,
+                "y": 60,
+                "wires": [
+                    {
+                        "id": "65395490d8b06483"
+                    }
+                ]
+            }
+        ],
+        "out": [],
+        "env": [],
+        "meta": {},
+        "color": "#DDAA99"
+    },
+    {
         "id": "df1407b1752224f3",
         "type": "mqtt-broker",
         "name": "",
@@ -440,11 +423,138 @@
         "rejectUnauthorized": false
     },
     {
+        "id": "eb72cd72095be319",
+        "type": "ui_group",
+        "name": "Controls",
+        "tab": "4f133d49b124c7f6",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "4f133d49b124c7f6",
+        "type": "ui_tab",
+        "name": "Home",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "b99cca3d03988dbb",
+        "type": "ui_base",
+        "theme": {
+            "name": "theme-light",
+            "lightTheme": {
+                "default": "#0094CE",
+                "baseColor": "#0094CE",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "darkTheme": {
+                "default": "#097479",
+                "baseColor": "#097479",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": false
+            },
+            "customTheme": {
+                "name": "Untitled Theme 1",
+                "default": "#4B7930",
+                "baseColor": "#4B7930",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+            },
+            "themeState": {
+                "base-color": {
+                    "default": "#0094CE",
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-titlebar-backgroundColor": {
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-backgroundColor": {
+                    "value": "#fafafa",
+                    "edited": false
+                },
+                "page-sidebar-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-textColor": {
+                    "value": "#1bbfff",
+                    "edited": false
+                },
+                "group-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "widget-textColor": {
+                    "value": "#111111",
+                    "edited": false
+                },
+                "widget-backgroundColor": {
+                    "value": "#0094ce",
+                    "edited": false
+                },
+                "widget-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "base-font": {
+                    "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+                }
+            },
+            "angularTheme": {
+                "primary": "indigo",
+                "accents": "blue",
+                "warn": "red",
+                "background": "grey",
+                "palette": "light"
+            }
+        },
+        "site": {
+            "name": "Node-RED Dashboard",
+            "hideToolbar": "false",
+            "allowSwipe": "false",
+            "lockMenu": "false",
+            "allowTempTheme": "true",
+            "dateFormat": "DD/MM/YYYY",
+            "sizes": {
+                "sx": 48,
+                "sy": 48,
+                "gx": 6,
+                "gy": 6,
+                "cx": 6,
+                "cy": 6,
+                "px": 0,
+                "py": 0
+            }
+        }
+    },
+    {
+        "id": "ea05100403028c32",
+        "type": "ui_group",
+        "name": "Graphs",
+        "tab": "4f133d49b124c7f6",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
         "id": "01b3f7383b477df5",
         "type": "function",
         "z": "efb1c3cb4ec1b96e",
         "name": "Charge Current",
-        "func": "var brakerSize = 25;\nvar maxChargeAmps =  Number(env.get(\"maxChargeAmps\"));\nvar minChargeAmps = 6;\nvar amps = null;\nvar maxPhase = msg.payload.value;\nvar prevAmps = flow.get('prevAmps');\nvar availAmps = Math.round(brakerSize - maxPhase) + prevAmps;\n\nnode.debug(`max phase amps ${maxPhase}`);\nnode.debug(`available amps ${availAmps}`);\n\nif (availAmps >= maxChargeAmps) {\n    amps = maxChargeAmps;\n    node.debug(`setting charge amps to ${amps} (max)`);\n} else if (availAmps < maxChargeAmps && availAmps >= minChargeAmps) {\n    amps = availAmps;\n    node.debug(`setting charge amps to ${amps}`);\n} else if (availAmps < minChargeAmps) {\n    amps = minChargeAmps;\n    node.debug(`available amps below ${minChargeAmps}, stopping charging`);\n}\n\nmsg.topic = 'amps';\nmsg.payload = amps;\nmsg.maxChargeAmps = maxChargeAmps;\nflow.set('prevAmps', amps);\n\nreturn msg;",
+        "func": "var brakerSize = 25;\nvar maxChargeAmps =  Number(global.get(\"maxChargeAmps\")) || 0;\nvar minChargeAmps = 6;\nvar amps = null;\nvar maxPhase = msg.payload.value;\nvar prevAmps = flow.get('prevAmps');\nvar availAmps = Math.round(brakerSize - maxPhase) + prevAmps;\n\nnode.debug(`max phase amps ${maxPhase}`);\nnode.debug(`available amps ${availAmps}`);\n\nif (availAmps >= maxChargeAmps) {\n    amps = maxChargeAmps;\n    node.debug(`setting charge amps to ${amps} (max)`);\n} else if (availAmps < maxChargeAmps && availAmps >= minChargeAmps) {\n    amps = availAmps;\n    node.debug(`setting charge amps to ${amps}`);\n} else if (availAmps < minChargeAmps) {\n    amps = minChargeAmps;\n    node.debug(`available amps below ${minChargeAmps}, stopping charging`);\n}\n\nmsg.topic = 'amps';\nmsg.payload = amps;\nmsg.maxChargeAmps = maxChargeAmps;\nflow.set('prevAmps', amps);\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "// Code added here will be run once\n// whenever the node is started.\nvar prevAmps = flow.set(\"prevAmps\", 6);",
@@ -477,13 +587,13 @@
         "type": "function",
         "z": "efb1c3cb4ec1b96e",
         "name": "Status",
-        "func": "node.status({\n    fill: 'green',\n    shape: 'dot',\n    text:`Can charge ${msg.payload} A`\n});\n\nmsg.curr = msg.payload;\nreturn msg;",
+        "func": "node.status({\n    fill: 'green',\n    shape: 'dot',\n    text:`Charging current ${msg.payload} A`\n});\n\nmsg.curr = msg.payload;\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 710,
+        "x": 690,
         "y": 100,
         "wires": [
             []
@@ -523,7 +633,7 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 570,
+        "x": 550,
         "y": 100,
         "wires": [
             [
@@ -951,6 +1061,52 @@
         ]
     },
     {
+        "id": "54ba9f9ec7fbc7bb",
+        "type": "mqtt out",
+        "z": "ed9c44006b3afbd1",
+        "name": "",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "df1407b1752224f3",
+        "x": 430,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "65395490d8b06483",
+        "type": "function",
+        "z": "ed9c44006b3afbd1",
+        "name": "function 4",
+        "func": "\nreturn [\n    {\n        topic: \"charging/current\",\n        payload: msg.payload.current  \n    },\n    {\n        topic: \"charging/load\",\n        payload: msg.payload.maxPhase \n    },\n    {\n        topic: \"charging/status\",\n        payload: msg.payload.status  \n    },\n        {\n        topic: \"charging/maxPhase\",\n        payload: msg.payload.maxName\n    }\n];",
+        "outputs": 4,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 200,
+        "y": 60,
+        "wires": [
+            [
+                "54ba9f9ec7fbc7bb"
+            ],
+            [
+                "54ba9f9ec7fbc7bb"
+            ],
+            [
+                "54ba9f9ec7fbc7bb"
+            ],
+            [
+                "54ba9f9ec7fbc7bb"
+            ]
+        ]
+    },
+    {
         "id": "6a6ce9b1913a8316",
         "type": "mqtt in",
         "z": "f6f2187d.f17ca8",
@@ -979,7 +1135,7 @@
         "env": [
             {
                 "name": "maxChargeAmps",
-                "value": "10",
+                "value": "14",
                 "type": "str"
             }
         ],
@@ -1006,8 +1162,8 @@
         "retentionPolicyV18Flux": "",
         "org": "nodered",
         "bucket": "nodered",
-        "x": 1520,
-        "y": 80,
+        "x": 1540,
+        "y": 40,
         "wires": []
     },
     {
@@ -1048,7 +1204,7 @@
         "type": "function",
         "z": "f6f2187d.f17ca8",
         "name": "Max Current",
-        "func": "var sortable = [];\nfor (var phase in msg.payload) {\n    sortable.push([phase, msg.payload[phase]]);\n}\n\nsortable.sort(function(a, b) {\n    return b[1] - a[1];\n});\nmsg.payload = {\n    phase: sortable[0][0],\n    value: sortable[0][1]\n}\nnode.status({\n    fill: 'green',\n    shape: 'dot',\n    text:`${msg.payload.phase.toUpperCase()} ${msg.payload.value} A`\n});\nreturn msg;",
+        "func": "var sortable = [];\nfor (var phase in msg.payload) {\n    sortable.push([phase, msg.payload[phase]]);\n}\n\nsortable.sort(function(a, b) {\n    return b[1] - a[1];\n});\nmsg.payload = {\n    phase: sortable[0][0],\n    value: sortable[0][1]\n}\nnode.status({\n    fill: 'green',\n    shape: 'dot',\n    text:`${msg.payload.phase.toUpperCase()} ${msg.payload.value} A`\n});\n\nmsg.maxPhase = {\n    name: msg.payload.phase,\n    value: msg.payload.value\n}\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1095,9 +1251,10 @@
         "id": "ceba56b837aa0bf7",
         "type": "subflow:e0df0ca748936d99",
         "z": "f6f2187d.f17ca8",
+        "d": true,
         "name": "",
         "env": [],
-        "x": 1490,
+        "x": 1650,
         "y": 160,
         "wires": [
             []
@@ -1107,9 +1264,10 @@
         "id": "a4538abbfa59c622",
         "type": "subflow:39e4f6d7bc65b2db",
         "z": "f6f2187d.f17ca8",
+        "d": true,
         "name": "",
         "env": [],
-        "x": 1680,
+        "x": 1820,
         "y": 280,
         "wires": [
             []
@@ -1136,7 +1294,7 @@
         "y": 160,
         "wires": [
             [
-                "ceba56b837aa0bf7"
+                "9056dd367528392b"
             ]
         ]
     },
@@ -1145,7 +1303,7 @@
         "type": "function",
         "z": "f6f2187d.f17ca8",
         "name": "Prepare",
-        "func": "var current = 0;\nif (msg.chargerStatus === \"Charging\") {\n    current = msg.payload;\n}\nmsg.payload = {\n    current: current,\n    status : msg.chargerStatus,\n    maxCurrent: msg.maxChargeAmps\n}\nreturn msg;",
+        "func": "var current = 0;\nif (msg.chargerStatus === \"Charging\") {\n    current = msg.payload;\n}\nmsg.payload = {\n    current: current,\n    status : msg.chargerStatus,\n    maxPhase: msg.maxPhase.value,\n    maxName: msg.maxPhase.name\n}\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1155,6 +1313,7 @@
         "y": 80,
         "wires": [
             [
+                "1c5e53588ddda53e",
                 "b6c67d19522ac87d"
             ]
         ]
@@ -1182,7 +1341,7 @@
         "y": 240,
         "wires": [
             [
-                "a4538abbfa59c622"
+                "9e6a57ccf7850111"
             ]
         ]
     },
@@ -1231,7 +1390,7 @@
         "y": 320,
         "wires": [
             [
-                "a4538abbfa59c622"
+                "9e6a57ccf7850111"
             ]
         ]
     },
@@ -1268,6 +1427,426 @@
         "info": "If you want to limit the max charging current, double click Phase Current node and select max current from dropdown menu.\n\nDefault is 16 A.",
         "x": 150,
         "y": 80,
+        "wires": []
+    },
+    {
+        "id": "9056dd367528392b",
+        "type": "switch",
+        "z": "f6f2187d.f17ca8",
+        "name": "If Enabled",
+        "property": "controlEnabled",
+        "propertyType": "global",
+        "rules": [
+            {
+                "t": "true"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 1440,
+        "y": 160,
+        "wires": [
+            [
+                "ceba56b837aa0bf7"
+            ]
+        ]
+    },
+    {
+        "id": "9e6a57ccf7850111",
+        "type": "switch",
+        "z": "f6f2187d.f17ca8",
+        "name": "If Enabled",
+        "property": "controlEnabled",
+        "propertyType": "global",
+        "rules": [
+            {
+                "t": "true"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 1620,
+        "y": 280,
+        "wires": [
+            [
+                "a4538abbfa59c622"
+            ]
+        ]
+    },
+    {
+        "id": "1c5e53588ddda53e",
+        "type": "subflow:ed9c44006b3afbd1",
+        "z": "f6f2187d.f17ca8",
+        "name": "Publish MQTT",
+        "x": 1440,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "dae61da9be9bf872",
+        "type": "ui_slider",
+        "z": "7361e20fe34a37d4",
+        "name": "",
+        "label": "Max Amps",
+        "tooltip": "",
+        "group": "eb72cd72095be319",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "outs": "end",
+        "topic": "payload",
+        "topicType": "msg",
+        "min": "6",
+        "max": "16",
+        "step": 1,
+        "className": "",
+        "x": 230,
+        "y": 100,
+        "wires": [
+            [
+                "5debaef3fd4657af"
+            ]
+        ]
+    },
+    {
+        "id": "5debaef3fd4657af",
+        "type": "change",
+        "z": "7361e20fe34a37d4",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "maxChargeAmps",
+                "pt": "global",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 460,
+        "y": 100,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "51d4e8e9bb7e5443",
+        "type": "ui_switch",
+        "z": "7361e20fe34a37d4",
+        "name": "",
+        "label": "Enabled",
+        "tooltip": "",
+        "group": "eb72cd72095be319",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "className": "",
+        "x": 220,
+        "y": 180,
+        "wires": [
+            [
+                "dce7cbbe4d511431"
+            ]
+        ]
+    },
+    {
+        "id": "dce7cbbe4d511431",
+        "type": "change",
+        "z": "7361e20fe34a37d4",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "controlEnabled",
+                "pt": "global",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 450,
+        "y": 180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "381445bde9c58150",
+        "type": "ui_chart",
+        "z": "7361e20fe34a37d4",
+        "name": "",
+        "group": "ea05100403028c32",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "label": "Charging Current",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": "2",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "60",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 630,
+        "y": 500,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2d86fca09ad00e1d",
+        "type": "function",
+        "z": "7361e20fe34a37d4",
+        "name": "function 1",
+        "func": "msg.topic = \"Charging Current\"\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 460,
+        "wires": [
+            [
+                "381445bde9c58150"
+            ]
+        ]
+    },
+    {
+        "id": "15fd63864a715610",
+        "type": "function",
+        "z": "7361e20fe34a37d4",
+        "name": "function 2",
+        "func": "msg.topic = \"Status\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 380,
+        "wires": [
+            [
+                "f73900acacb83a0e"
+            ]
+        ]
+    },
+    {
+        "id": "3c8f81249d82a8d5",
+        "type": "mqtt in",
+        "z": "7361e20fe34a37d4",
+        "name": "",
+        "topic": "charging/current",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "df1407b1752224f3",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 240,
+        "y": 460,
+        "wires": [
+            [
+                "2d86fca09ad00e1d"
+            ]
+        ]
+    },
+    {
+        "id": "078ac8693bac33b9",
+        "type": "mqtt in",
+        "z": "7361e20fe34a37d4",
+        "name": "",
+        "topic": "charging/status",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "df1407b1752224f3",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 220,
+        "y": 380,
+        "wires": [
+            [
+                "15fd63864a715610"
+            ]
+        ]
+    },
+    {
+        "id": "feb1d101a44a61ab",
+        "type": "function",
+        "z": "7361e20fe34a37d4",
+        "name": "function 3",
+        "func": "msg.topic = \"Max Phase\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 540,
+        "wires": [
+            [
+                "381445bde9c58150"
+            ]
+        ]
+    },
+    {
+        "id": "2031714c77e4fa58",
+        "type": "mqtt in",
+        "z": "7361e20fe34a37d4",
+        "name": "",
+        "topic": "charging/load",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "df1407b1752224f3",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 250,
+        "y": 540,
+        "wires": [
+            [
+                "feb1d101a44a61ab"
+            ]
+        ]
+    },
+    {
+        "id": "f73900acacb83a0e",
+        "type": "ui_text",
+        "z": "7361e20fe34a37d4",
+        "group": "ea05100403028c32",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Status",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "x": 570,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "7cafd6323a09fc4d",
+        "type": "debug",
+        "z": "7361e20fe34a37d4",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 620,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "8f4de16a9c9a1061",
+        "type": "function",
+        "z": "7361e20fe34a37d4",
+        "name": "function 5",
+        "func": "msg.topic = \"Max Phase\";\nmsg.payload = msg.payload.toUpperCase();\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 300,
+        "wires": [
+            [
+                "25abdc7e6c0d4414"
+            ]
+        ]
+    },
+    {
+        "id": "547502de98339214",
+        "type": "mqtt in",
+        "z": "7361e20fe34a37d4",
+        "name": "",
+        "topic": "charging/maxPhase",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "df1407b1752224f3",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 230,
+        "y": 300,
+        "wires": [
+            [
+                "8f4de16a9c9a1061"
+            ]
+        ]
+    },
+    {
+        "id": "25abdc7e6c0d4414",
+        "type": "ui_text",
+        "z": "7361e20fe34a37d4",
+        "group": "ea05100403028c32",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Max Phase",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "x": 590,
+        "y": 300,
         "wires": []
     }
 ]
