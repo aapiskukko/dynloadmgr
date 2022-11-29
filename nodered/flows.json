@@ -474,7 +474,7 @@
                     "edited": true
                 },
                 "page-titlebar-backgroundColor": {
-                    "value": "#097479",
+                    "value": "#4ab089",
                     "edited": false
                 },
                 "page-backgroundColor": {
@@ -482,11 +482,11 @@
                     "edited": false
                 },
                 "page-sidebar-backgroundColor": {
-                    "value": "#333333",
+                    "value": "#ffffff",
                     "edited": false
                 },
                 "group-textColor": {
-                    "value": "#0eb8c0",
+                    "value": "#7ec9ac",
                     "edited": false
                 },
                 "group-borderColor": {
@@ -502,7 +502,7 @@
                     "edited": false
                 },
                 "widget-backgroundColor": {
-                    "value": "#097479",
+                    "value": "#4ab089",
                     "edited": false
                 },
                 "widget-borderColor": {
@@ -1596,7 +1596,8 @@
         "y": 460,
         "wires": [
             [
-                "381445bde9c58150"
+                "381445bde9c58150",
+                "0dbf83e30af26fb5"
             ]
         ]
     },
@@ -1866,5 +1867,22 @@
         "wires": [
             []
         ]
+    },
+    {
+        "id": "0dbf83e30af26fb5",
+        "type": "ui_text",
+        "z": "7361e20fe34a37d4",
+        "group": "ea05100403028c32",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Charging Current",
+        "format": "{{msg.payload}} A",
+        "layout": "row-spread",
+        "className": "",
+        "x": 630,
+        "y": 440,
+        "wires": []
     }
 ]
