@@ -556,7 +556,7 @@
         "type": "function",
         "z": "efb1c3cb4ec1b96e",
         "name": "Charge Current",
-        "func": "var brakerSize = 25;\nvar minChargeAmps = 6;\nvar maxChargeAmps =  Number(global.get(\"maxChargeAmps\", \"persist\")) || minChargeAmps;\nvar amps = null;\nvar maxPhase = msg.maxPhase.value;\nvar prevAmps = flow.get('prevAmps');\nvar availAmps = Math.round(brakerSize - maxPhase) + prevAmps;\n\nnode.error(`max phase amps ${maxPhase}`);\nnode.error(`available amps ${availAmps}`);\n\nif (availAmps >= maxChargeAmps) {\n    amps = maxChargeAmps;\n    node.error(`setting charge amps to ${amps} (max)`);\n} else if (availAmps < maxChargeAmps && availAmps >= minChargeAmps) {\n    amps = availAmps;\n    node.error(`setting charge amps to ${amps}`);\n} else if (availAmps < minChargeAmps) {\n    amps = minChargeAmps;\n    node.error(`available amps below ${minChargeAmps}, stopping charging`);\n}\n\nmsg.topic = 'amps';\nmsg.payload = amps;\nmsg.maxChargeAmps = maxChargeAmps;\nflow.set('prevAmps', amps);\n\nreturn msg;",
+        "func": "var brakerSize = 25;\nvar minChargeAmps = 6;\nvar maxChargeAmps =  Number(global.get(\"maxChargeAmps\", \"persist\")) || minChargeAmps;\nvar amps = null;\nvar maxPhase = msg.maxPhase.value;\nvar prevAmps = flow.get('prevAmps');\nvar availAmps = Math.round(brakerSize - maxPhase) + prevAmps;\n\nnode.debug(`max phase amps ${maxPhase}`);\nnode.debug(`available amps ${availAmps}`);\n\nif (availAmps >= maxChargeAmps) {\n    amps = maxChargeAmps;\n    node.debug(`setting charge amps to ${amps} (max)`);\n} else if (availAmps < maxChargeAmps && availAmps >= minChargeAmps) {\n    amps = availAmps;\n    node.debug(`setting charge amps to ${amps}`);\n} else if (availAmps < minChargeAmps) {\n    amps = minChargeAmps;\n    node.debug(`available amps below ${minChargeAmps}, stopping charging`);\n}\n\nmsg.topic = 'amps';\nmsg.payload = amps;\nmsg.maxChargeAmps = maxChargeAmps;\nflow.set('prevAmps', amps);\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "// Code added here will be run once\n// whenever the node is started.\nvar prevAmps = flow.set(\"prevAmps\", 6);",
@@ -1473,6 +1473,111 @@
         "wires": [
             [
                 "a4538abbfa59c622"
+            ]
+        ]
+    },
+    {
+        "id": "035b64edd9f8789e",
+        "type": "mqtt in",
+        "z": "f6f2187d.f17ca8",
+        "d": true,
+        "name": "Shelly 3EM Currents",
+        "topic": "shellies/shellyem3-C45BBE6A7845/emeter/+/energy",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "df1407b1752224f3",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 150,
+        "y": 380,
+        "wires": [
+            [
+                "51fa8d40e7425ea2"
+            ]
+        ]
+    },
+    {
+        "id": "c07940b4b4664a5a",
+        "type": "debug",
+        "z": "f6f2187d.f17ca8",
+        "name": "Prev min prize in €",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 830,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "51fa8d40e7425ea2",
+        "type": "join",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "mode": "custom",
+        "build": "array",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "0.2",
+        "count": "",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 330,
+        "y": 380,
+        "wires": [
+            [
+                "0d275a069aec3504"
+            ]
+        ]
+    },
+    {
+        "id": "0d275a069aec3504",
+        "type": "function",
+        "z": "f6f2187d.f17ca8",
+        "name": "function 6",
+        "func": "const wattHoursConst = 0.0166666667;\nvar totalWatMins = 0;\n\nfor (const phase of msg.payload) {\n    totalWatMins += Number(phase);\n}\nmsg.payload = (totalWatMins * wattHoursConst) / 1e3;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 480,
+        "y": 380,
+        "wires": [
+            [
+                "6a2ab4ba76ae553d"
+            ]
+        ]
+    },
+    {
+        "id": "6a2ab4ba76ae553d",
+        "type": "function",
+        "z": "f6f2187d.f17ca8",
+        "name": "function 7",
+        "func": "let energyKwh = msg.payload;\n\nconst transferKwh = 0.0272;\nconst taxKwh = 0.0279372;\nconst prizeKwh = 0.24;\n\nlet prize = energyKwh * (transferKwh + taxKwh + prizeKwh);\n\nmsg.payload = {\n    prize: Number(prize.toFixed(4)),\n    consumption: Number(energyKwh.toFixed(4))\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 640,
+        "y": 380,
+        "wires": [
+            [
+                "c07940b4b4664a5a"
             ]
         ]
     },
