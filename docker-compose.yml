@@ -35,6 +35,7 @@ services:
       - influxdb
     environment:
       - GO_E_CHARGER_HOST=${GO_E_CHARGER_HOST}
+      - TZ=Europe/Helsinki
 
   grafana:
     image: grafana/grafana:8.2.3

@@ -1480,7 +1480,6 @@
         "id": "035b64edd9f8789e",
         "type": "mqtt in",
         "z": "f6f2187d.f17ca8",
-        "d": true,
         "name": "Shelly 3EM Currents",
         "topic": "shellies/shellyem3-C45BBE6A7845/emeter/+/energy",
         "qos": "2",
@@ -1490,30 +1489,13 @@
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 150,
-        "y": 380,
+        "x": 110,
+        "y": 520,
         "wires": [
             [
                 "51fa8d40e7425ea2"
             ]
         ]
-    },
-    {
-        "id": "c07940b4b4664a5a",
-        "type": "debug",
-        "z": "f6f2187d.f17ca8",
-        "name": "Prev min prize in €",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 830,
-        "y": 380,
-        "wires": []
     },
     {
         "id": "51fa8d40e7425ea2",
@@ -1535,8 +1517,8 @@
         "reduceInit": "",
         "reduceInitType": "",
         "reduceFixup": "",
-        "x": 330,
-        "y": 380,
+        "x": 290,
+        "y": 520,
         "wires": [
             [
                 "0d275a069aec3504"
@@ -1547,15 +1529,15 @@
         "id": "0d275a069aec3504",
         "type": "function",
         "z": "f6f2187d.f17ca8",
-        "name": "function 6",
+        "name": "Energy",
         "func": "const wattHoursConst = 0.0166666667;\nvar totalWatMins = 0;\n\nfor (const phase of msg.payload) {\n    totalWatMins += Number(phase);\n}\nmsg.payload = (totalWatMins * wattHoursConst) / 1e3;\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 480,
-        "y": 380,
+        "x": 440,
+        "y": 520,
         "wires": [
             [
                 "6a2ab4ba76ae553d"
@@ -1566,20 +1548,38 @@
         "id": "6a2ab4ba76ae553d",
         "type": "function",
         "z": "f6f2187d.f17ca8",
-        "name": "function 7",
-        "func": "let energyKwh = msg.payload;\n\nconst transferKwh = 0.0272;\nconst taxKwh = 0.0279372;\nconst prizeKwh = 0.24;\n\nlet prize = energyKwh * (transferKwh + taxKwh + prizeKwh);\n\nmsg.payload = {\n    prize: Number(prize.toFixed(4)),\n    consumption: Number(energyKwh.toFixed(4))\n}\n\nreturn msg;",
+        "name": "Prizes",
+        "func": "/*\n* Talviarkipäivä 1.11. - 31.3. maanantaista lauantaihin klo 7.00 - 22.00.\n*/\n\nlet energyKwh = msg.payload;\n\nconst d = new Date();\nlet day = d.getDay();\nlet hour = d.getHours();\nlet month = d.getMonth();\nlet date = d.getDate();\nlet diff = d.getTimezoneOffset();\n\n// Elecric prizes\nconst transWintKwh = 0.0272;\nconst transOthKwh = 0.0162;\nconst taxKwh = 0.0279372;\nconst prizeKwh = 0.24;\n\nlet transKwh = transOthKwh;\n\n// Winter day prizing between 1.11 and 31.3\nif ((month >= 11 && date >= 1) || (month <= 3 && date <= 31)) {\n    // From Monday to Saturday\n    if (day >= 0 && day <= 6) {\n        // Between 7.00 and 22.00\n        if (hour >= 7 && hour <= 22) {\n            node.debug(\"Is between hours 7-22. WINTER prize!\");\n            transKwh = transWintKwh;\n        }\n    }\n}\n\nlet prize = energyKwh * (transKwh + taxKwh + prizeKwh);\n\nmsg.payload = {\n    prize: Number(prize.toFixed(4)),\n    consumption: Number(energyKwh.toFixed(4))\n}\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 640,
-        "y": 380,
+        "x": 590,
+        "y": 520,
         "wires": [
             [
-                "c07940b4b4664a5a"
+                "4c144648e2070e36"
             ]
         ]
+    },
+    {
+        "id": "4c144648e2070e36",
+        "type": "influxdb out",
+        "z": "f6f2187d.f17ca8",
+        "influxdb": "c456f62e30a15dfe",
+        "name": "",
+        "measurement": "houseConsumption",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "s",
+        "retentionPolicyV18Flux": "",
+        "org": "nodered",
+        "bucket": "nodered",
+        "x": 850,
+        "y": 520,
+        "wires": []
     },
     {
         "id": "dae61da9be9bf872",
