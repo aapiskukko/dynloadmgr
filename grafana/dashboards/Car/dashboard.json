@@ -396,7 +396,7 @@
         },
         {
           "hide": false,
-          "query": "from(bucket: v.defaultBucket) \n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)  \n  |> filter(fn: (r) => r._measurement == \"phaseCurrents\" and r._field == \"l3\")\n  |> map(fn: (r) => ({_value:r._value, _time:r._time, _field: \"L3\"}))",
+          "query": "from(bucket: \"dynloadmgr\") \n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)  \n  |> filter(fn: (r) => r._measurement == \"phaseCurrents\" and r._field == \"l3\")\n  |> map(fn: (r) => ({_value:r._value, _time:r._time, _field: \"L3\"}))",
           "refId": "C"
         }
       ],
