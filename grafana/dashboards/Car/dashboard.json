@@ -22,7 +22,6 @@
   "fiscalYearStartMonth": 0,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 3,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -105,12 +104,12 @@
       "targets": [
         {
           "hide": false,
-          "query": "from(bucket: v.defaultBucket) \n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)  \n  |> filter(fn: (r) => r._measurement == \"chargeCurrent\" and r._field == \"current\")\n  |> map(fn: (r) => ({_value:r._value, _time:r._time, _field: \"Charging Current\"}))",
+          "query": "from(bucket: \"dynloadmgr\") \n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)  \n  |> filter(fn: (r) => r._measurement == \"chargeCurrent\" and r._field == \"current\")\n  |> map(fn: (r) => ({_value:r._value, _time:r._time, _field: \"Charging Current\"}))",
           "refId": "A"
         },
         {
           "hide": false,
-          "query": "import \"math\"\nfrom(bucket: v.defaultBucket) \n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)  \n  |> filter(fn: (r) => r._measurement == \"phaseCurrents\" and (r._field == \"l1\" or r._field == \"l2\" or r._field == \"l3\"))\n  |> pivot(rowKey:[\"_time\"],columnKey: [\"_field\"], valueColumn: \"_value\")\n  |> map(fn: (r) => ({ r with \"Max Phase\": math.mMax(x: math.mMax(x: r.l1, y: r.l2),y: r.l3) }))\n  |> drop(columns: [\"l1\", \"l2\", \"l3\", \"_start\", \"_stop\", \"_measurement\"])",
+          "query": "import \"math\"\nfrom(bucket: \"dynloadmgr\") \n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)  \n  |> filter(fn: (r) => r._measurement == \"phaseCurrents\" and (r._field == \"l1\" or r._field == \"l2\" or r._field == \"l3\"))\n  |> pivot(rowKey:[\"_time\"],columnKey: [\"_field\"], valueColumn: \"_value\")\n  |> map(fn: (r) => ({ r with \"Max Phase\": math.mMax(x: math.mMax(x: r.l1, y: r.l2),y: r.l3) }))\n  |> drop(columns: [\"l1\", \"l2\", \"l3\", \"_start\", \"_stop\", \"_measurement\"])",
           "refId": "B"
         }
       ],
@@ -167,7 +166,7 @@
       "pluginVersion": "8.2.3",
       "targets": [
         {
-          "query": "from(bucket: v.defaultBucket) \n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)  \n  |> filter(fn: (r) => r._measurement == \"chargeCurrent\" and r._field == \"status\")\n  |> map(fn: (r) => ({_value:r._value, _time:r._time, _field: \"Charging Status\"}))",
+          "query": "from(bucket: \"dynloadmgr\") \n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)  \n  |> filter(fn: (r) => r._measurement == \"chargeCurrent\" and r._field == \"status\")\n  |> map(fn: (r) => ({_value:r._value, _time:r._time, _field: \"Charging Status\"}))",
           "refId": "A"
         }
       ],
@@ -224,12 +223,12 @@
       "pluginVersion": "8.2.3",
       "targets": [
         {
-          "query": "from(bucket: v.defaultBucket) \n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)  \n  |> filter(fn: (r) => r._measurement == \"chargeCurrent\" and r._field == \"current\")\n  |> map(fn: (r) => ({_value:r._value, _time:r._time, _field: \"Charging Current\"}))",
+          "query": "from(bucket: \"dynloadmgr\") \n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)  \n  |> filter(fn: (r) => r._measurement == \"chargeCurrent\" and r._field == \"current\")\n  |> map(fn: (r) => ({_value:r._value, _time:r._time, _field: \"Charging Current\"}))",
           "refId": "A"
         },
         {
           "hide": false,
-          "query": "import \"math\"\nfrom(bucket: v.defaultBucket) \n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)  \n  |> filter(fn: (r) => r._measurement == \"phaseCurrents\" and (r._field == \"l1\" or r._field == \"l2\" or r._field == \"l3\"))\n  |> pivot(rowKey:[\"_time\"],columnKey: [\"_field\"], valueColumn: \"_value\")\n  |> map(fn: (r) => ({ r with \"Max Phase\": math.mMax(x: math.mMax(x: r.l1, y: r.l2),y: r.l3) }))\n  |> drop(columns: [\"l1\", \"l2\", \"l3\", \"_start\", \"_stop\", \"_measurement\"])",
+          "query": "import \"math\"\nfrom(bucket: \"dynloadmgr\") \n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)  \n  |> filter(fn: (r) => r._measurement == \"phaseCurrents\" and (r._field == \"l1\" or r._field == \"l2\" or r._field == \"l3\"))\n  |> pivot(rowKey:[\"_time\"],columnKey: [\"_field\"], valueColumn: \"_value\")\n  |> map(fn: (r) => ({ r with \"Max Phase\": math.mMax(x: math.mMax(x: r.l1, y: r.l2),y: r.l3) }))\n  |> drop(columns: [\"l1\", \"l2\", \"l3\", \"_start\", \"_stop\", \"_measurement\"])",
           "refId": "B"
         },
         {
@@ -320,12 +319,12 @@
       },
       "targets": [
         {
-          "query": "from(bucket: v.defaultBucket) \n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)  \n  |> filter(fn: (r) => r._measurement == \"phaseCurrents\" and r._field == \"l1\")\n  |> map(fn: (r) => ({_value:r._value, _time:r._time, _field: \"L1\"}))",
+          "query": "from(bucket: \"dynloadmgr\") \n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)  \n  |> filter(fn: (r) => r._measurement == \"phaseCurrents\" and r._field == \"l1\")\n  |> map(fn: (r) => ({_value:r._value, _time:r._time, _field: \"L1\"}))",
           "refId": "A"
         },
         {
           "hide": false,
-          "query": "from(bucket: v.defaultBucket) \n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)  \n  |> filter(fn: (r) => r._measurement == \"phaseCurrents\" and r._field == \"l2\")\n  |> map(fn: (r) => ({_value:r._value, _time:r._time, _field: \"L2\"}))",
+          "query": "from(bucket: \"dynloadmgr\") \n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)  \n  |> filter(fn: (r) => r._measurement == \"phaseCurrents\" and r._field == \"l2\")\n  |> map(fn: (r) => ({_value:r._value, _time:r._time, _field: \"L2\"}))",
           "refId": "B"
         },
         {
@@ -387,12 +386,12 @@
       "pluginVersion": "8.2.3",
       "targets": [
         {
-          "query": "from(bucket: v.defaultBucket) \n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)  \n  |> filter(fn: (r) => r._measurement == \"phaseCurrents\" and r._field == \"l1\")\n  |> map(fn: (r) => ({_value:r._value, _time:r._time, _field: \"L1\"}))",
+          "query": "from(bucket: \"dynloadmgr\") \n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)  \n  |> filter(fn: (r) => r._measurement == \"phaseCurrents\" and r._field == \"l1\")\n  |> map(fn: (r) => ({_value:r._value, _time:r._time, _field: \"L1\"}))",
           "refId": "A"
         },
         {
           "hide": false,
-          "query": "from(bucket: v.defaultBucket) \n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)  \n  |> filter(fn: (r) => r._measurement == \"phaseCurrents\" and r._field == \"l2\")\n  |> map(fn: (r) => ({_value:r._value, _time:r._time, _field: \"L2\"}))",
+          "query": "from(bucket: \"dynloadmgr\") \n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)  \n  |> filter(fn: (r) => r._measurement == \"phaseCurrents\" and r._field == \"l2\")\n  |> map(fn: (r) => ({_value:r._value, _time:r._time, _field: \"L2\"}))",
           "refId": "B"
         },
         {
@@ -420,5 +419,5 @@
   "timezone": "",
   "title": "Dynamic Charge Monitor",
   "uid": "mJG4oWcnz",
-  "version": 2
+  "version": 1
 }

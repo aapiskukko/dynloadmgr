@@ -1115,7 +1115,7 @@
         "name": "Shelly 3EM Currents",
         "topic": "shellies/shellyem3-C45BBE6A7845/emeter/+/current",
         "qos": "2",
-        "datatype": "auto",
+        "datatype": "auto-detect",
         "broker": "df1407b1752224f3",
         "nl": false,
         "rap": true,
@@ -1163,7 +1163,7 @@
         "precisionV18FluxV20": "s",
         "retentionPolicyV18Flux": "",
         "org": "nodered",
-        "bucket": "nodered",
+        "bucket": "dynloadmgr",
         "x": 1540,
         "y": 40,
         "wires": []
@@ -1181,7 +1181,7 @@
         "precisionV18FluxV20": "s",
         "retentionPolicyV18Flux": "",
         "org": "nodered",
-        "bucket": "nodered",
+        "bucket": "dynloadmgr",
         "x": 720,
         "y": 80,
         "wires": []
@@ -1483,7 +1483,7 @@
         "name": "Shelly 3EM Currents",
         "topic": "shellies/shellyem3-C45BBE6A7845/emeter/+/energy",
         "qos": "2",
-        "datatype": "auto",
+        "datatype": "auto-detect",
         "broker": "df1407b1752224f3",
         "nl": false,
         "rap": true,
@@ -1540,7 +1540,7 @@
         "y": 520,
         "wires": [
             [
-                "6a2ab4ba76ae553d"
+                "7fa608c95914da46"
             ]
         ]
     },
@@ -1549,13 +1549,13 @@
         "type": "function",
         "z": "f6f2187d.f17ca8",
         "name": "Prizes",
-        "func": "/*\n* Talviarkipäivä 1.11. - 31.3. maanantaista lauantaihin klo 7.00 - 22.00.\n*/\n\nlet energyKwh = msg.payload;\n\nconst d = new Date();\nlet day = d.getDay();\nlet hour = d.getHours();\nlet month = d.getMonth();\nlet date = d.getDate();\nlet diff = d.getTimezoneOffset();\n\n// Elecric prizes\nconst transWintKwh = 0.0272;\nconst transOthKwh = 0.0162;\nconst taxKwh = 0.0279372;\nconst prizeKwh = 0.24;\n\nlet transKwh = transOthKwh;\n\n// Winter day prizing between 1.11 and 31.3\nif ((month >= 11 && date >= 1) || (month <= 3 && date <= 31)) {\n    // From Monday to Saturday\n    if (day >= 0 && day <= 6) {\n        // Between 7.00 and 22.00\n        if (hour >= 7 && hour <= 22) {\n            node.debug(\"Is between hours 7-22. WINTER prize!\");\n            transKwh = transWintKwh;\n        }\n    }\n}\n\nlet prize = energyKwh * (transKwh + taxKwh + prizeKwh);\n\nmsg.payload = {\n    prize: Number(prize.toFixed(4)),\n    consumption: Number(energyKwh.toFixed(4))\n}\n\nreturn msg;",
+        "func": "/*\n* Talviarkipäivä 1.11. - 31.3. maanantaista lauantaihin klo 7.00 - 22.00.\n*/\n\nlet energyKwh = msg.payload;\n\nconst d = new Date();\nlet day = d.getDay();\nlet hour = d.getHours();\nlet month = d.getMonth();\nlet date = d.getDate();\nlet diff = d.getTimezoneOffset();\n\n// Elecric prizes\nconst transWintKwh = 0.0272;\nconst transOthKwh = 0.0162;\nconst taxKwh = 0.0279372;\nconst prizeKwh = 0.1992;\n\nlet transKwh = transOthKwh;\n\n// Winter day prizing between 1.11 and 31.3\nif ((month >= 11 && date >= 1) || (month <= 3 && date <= 31)) {\n    // From Monday to Saturday\n    if (day >= 0 && day <= 6) {\n        // Between 7.00 and 22.00\n        if (hour >= 7 && hour <= 22) {\n            node.debug(\"Is between hours 7-22. WINTER prize!\");\n            transKwh = transWintKwh;\n        }\n    }\n}\n\nlet prize = energyKwh * (transKwh + taxKwh + prizeKwh);\n\nmsg.payload = {\n    prize: Number(prize.toFixed(4)),\n    consumption: Number(energyKwh.toFixed(4))\n}\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 590,
+        "x": 930,
         "y": 520,
         "wires": [
             [
@@ -1576,10 +1576,65 @@
         "precisionV18FluxV20": "s",
         "retentionPolicyV18Flux": "",
         "org": "nodered",
-        "bucket": "nodered",
-        "x": 850,
+        "bucket": "homeenergy",
+        "x": 1190,
         "y": 520,
         "wires": []
+    },
+    {
+        "id": "7fa608c95914da46",
+        "type": "join",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "mode": "custom",
+        "build": "array",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "",
+        "count": "1",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 590,
+        "y": 520,
+        "wires": [
+            [
+                "7cd4fa79e950b663"
+            ]
+        ]
+    },
+    {
+        "id": "7cd4fa79e950b663",
+        "type": "change",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "$sum(msg.payload)",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 760,
+        "y": 520,
+        "wires": [
+            [
+                "6a2ab4ba76ae553d"
+            ]
+        ]
     },
     {
         "id": "dae61da9be9bf872",
