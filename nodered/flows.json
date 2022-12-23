@@ -1595,7 +1595,7 @@
         "joinerType": "str",
         "accumulate": false,
         "timeout": "",
-        "count": "1",
+        "count": "10",
         "reduceRight": false,
         "reduceExp": "",
         "reduceInit": "",
