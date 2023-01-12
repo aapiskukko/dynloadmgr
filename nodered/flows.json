@@ -1549,13 +1549,13 @@
         "type": "function",
         "z": "f6f2187d.f17ca8",
         "name": "Prizes",
-        "func": "/*\n* Talviarkipäivä 1.11. - 31.3. maanantaista lauantaihin klo 7.00 - 22.00.\n*/\n\nlet energyKwh = msg.payload;\n\nconst d = new Date();\nlet day = d.getDay();\nlet hour = d.getHours();\nlet month = d.getMonth();\nlet date = d.getDate();\nlet diff = d.getTimezoneOffset();\n\n// Elecric prizes\nconst transWintKwh = 0.0272;\nconst transOthKwh = 0.0162;\nconst taxKwh = 0.0279372;\nconst prizeKwh = 0.1992;\n\nlet transKwh = transOthKwh;\n\n// Winter day prizing between 1.11 and 31.3\nif ((month >= 11 && date >= 1) || (month <= 3 && date <= 31)) {\n    // From Monday to Saturday\n    if (day >= 0 && day <= 6) {\n        // Between 7.00 and 22.00\n        if (hour >= 7 && hour <= 22) {\n            node.debug(\"Is between hours 7-22. WINTER prize!\");\n            transKwh = transWintKwh;\n        }\n    }\n}\n\nlet prize = energyKwh * (transKwh + taxKwh + prizeKwh);\n\nmsg.payload = {\n    prize: Number(prize.toFixed(4)),\n    consumption: Number(energyKwh.toFixed(4))\n}\n\nreturn msg;",
+        "func": "/*\n* Talviarkipäivä 1.11. - 31.3. maanantaista lauantaihin klo 7.00 - 22.00.\n*/\n\nlet energyKwh = msg.energyKwh;\n\nconst d = new Date();\nlet day = d.getDay();\nlet hour = d.getHours();\nlet month = d.getMonth();\nlet date = d.getDate();\nlet diff = d.getTimezoneOffset();\n\n// Elecric prizes\nconst transWintKwh = 0.0272;\nconst transOthKwh = 0.0162;\nconst taxKwh = 0.0279372;\nconst margin = 0.022;\nconst hourPrize = msg.hourPrize;\nconst discountFactor = 0.8;\nconst prizeKwh = (hourPrize + margin) * discountFactor;\n\nlet transKwh = transOthKwh;\n\n// Winter day prizing between 1.11 and 31.3\nif ((month >= 11 && date >= 1) || (month <= 3 && date <= 31)) {\n    // From Monday to Saturday\n    if (day >= 0 && day <= 6) {\n        // Between 7.00 and 22.00\n        if (hour >= 7 && hour <= 22) {\n            node.debug(\"Is between hours 7-22. WINTER prize!\");\n            transKwh = transWintKwh;\n        }\n    }\n}\n\nlet totalHourPrize = transKwh + taxKwh + prizeKwh;\nlet prize = energyKwh * totalHourPrize;\n\nmsg.payload = {\n    hourPrize: Number(totalHourPrize.toFixed(4)),\n    prize: Number(prize.toFixed(4)),\n    consumption: Number(energyKwh.toFixed(4))\n}\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 930,
+        "x": 1270,
         "y": 520,
         "wires": [
             [
@@ -1577,7 +1577,7 @@
         "retentionPolicyV18Flux": "",
         "org": "nodered",
         "bucket": "homeenergy",
-        "x": 1190,
+        "x": 1530,
         "y": 520,
         "wires": []
     },
@@ -1595,7 +1595,7 @@
         "joinerType": "str",
         "accumulate": false,
         "timeout": "",
-        "count": "10",
+        "count": "1",
         "reduceRight": false,
         "reduceExp": "",
         "reduceInit": "",
@@ -1617,7 +1617,7 @@
         "rules": [
             {
                 "t": "set",
-                "p": "payload",
+                "p": "energyKwh",
                 "pt": "msg",
                 "to": "$sum(msg.payload)",
                 "tot": "jsonata"
@@ -1628,7 +1628,57 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 760,
+        "x": 770,
+        "y": 520,
+        "wires": [
+            [
+                "f7cfe263b1d64547"
+            ]
+        ]
+    },
+    {
+        "id": "f7cfe263b1d64547",
+        "type": "http request",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "https://api.spot-hinta.fi/JustNow",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [
+            {
+                "keyType": "other",
+                "keyValue": "Accept",
+                "valueType": "other",
+                "valueValue": "application/json"
+            }
+        ],
+        "x": 970,
+        "y": 520,
+        "wires": [
+            [
+                "c027b48b89403752"
+            ]
+        ]
+    },
+    {
+        "id": "c027b48b89403752",
+        "type": "function",
+        "z": "f6f2187d.f17ca8",
+        "name": "Parse",
+        "func": "if (msg.statusCode !== 200) {\n    node.error(\"Failed to fetch hour prize!\");\n    return null;\n}\nvar data = JSON.parse(msg.payload);\nmsg.hourPrize = data.PriceWithTax;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1130,
         "y": 520,
         "wires": [
             [

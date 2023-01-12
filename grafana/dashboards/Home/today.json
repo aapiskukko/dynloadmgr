@@ -22,7 +22,6 @@
   "fiscalYearStartMonth": 0,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 6,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -57,7 +56,7 @@
         "x": 0,
         "y": 0
       },
-      "id": 8,
+      "id": 10,
       "options": {
         "colorMode": "value",
         "graphMode": "none",
@@ -137,6 +136,64 @@
         }
       ],
       "title": "Cost",
+      "transparent": true,
+      "type": "stat"
+    },
+    {
+      "datasource": "InfluxDB",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 3000
+              }
+            ]
+          },
+          "unit": "currencyEUR"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 0,
+        "y": 4
+      },
+      "id": 8,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "8.2.3",
+      "targets": [
+        {
+          "query": "from(bucket: \"homeenergy\") \n  |> range(start: today())  \n  |> filter(fn: (r) => r._measurement == \"houseConsumption\" and r._field == \"hourPrize\")\n  |> map(fn: (r) => ({_value:r._value, _time:r._time, _field: \"Hour Prize\"}))",
+          "refId": "A"
+        }
+      ],
+      "title": "Current Prize",
       "transparent": true,
       "type": "stat"
     },
@@ -233,7 +290,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 4
+        "y": 8
       },
       "id": 2,
       "options": {
