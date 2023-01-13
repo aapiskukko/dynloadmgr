@@ -267,7 +267,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "Prize"
+              "options": "Money"
             },
             "properties": [
               {
@@ -310,11 +310,11 @@
         },
         {
           "hide": false,
-          "query": "from(bucket: \"homeenergy\") \n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop) \n  |> filter(fn: (r) => r._measurement == \"houseConsumption\")\n  |> filter(fn: (r) => r._field == \"prize\")\n  |> map(fn: (r) => ({_value:r._value, _time:r._time, _field: \"Prize\"}))\n  |> aggregateWindow(every: 1h, fn: sum)\n",
+          "query": "from(bucket: \"homeenergy\") \n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop) \n  |> filter(fn: (r) => r._measurement == \"houseConsumption\")\n  |> filter(fn: (r) => r._field == \"prize\")\n  |> map(fn: (r) => ({_value:r._value, _time:r._time, _field: \"Money\"}))\n  |> aggregateWindow(every: 1h, fn: sum)\n",
           "refId": "B"
         }
       ],
-      "title": "Hour Prize and Consumption",
+      "title": "Each Hour Cumulative Consumption",
       "transparent": true,
       "type": "timeseries"
     },
@@ -448,7 +448,7 @@
     "list": []
   },
   "time": {
-    "from": "now-12h",
+    "from": "now-2d",
     "to": "now"
   },
   "timepicker": {
@@ -457,5 +457,5 @@
   "timezone": "",
   "title": "Today",
   "uid": "XV2NGu5Vz",
-  "version": 2
+  "version": 3
 }
